@@ -1,0 +1,28 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "your_password_here",
+    "database": "bookstore_dev",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "postgres",
+    "password": "your_password_here",
+    "database": "bookstore_test",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false
+  },
+  "production": {
+    "username": "postgres",
+    "password": "your_password_here",
+    "database": "bookstore_prod",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres",
+    "logging": false
+  }
+}

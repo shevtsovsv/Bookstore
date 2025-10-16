@@ -94,14 +94,20 @@ Created a comprehensive DBML (Database Markup Language) file that documents the 
 
 ### 3. Created Configuration File
 
-**File:** `config/config.json`
+**File:** `config/config.example.json`
 
-Created Sequelize configuration file with settings for:
+Created Sequelize configuration template file with settings for:
 - Development environment (bookstore_dev)
 - Test environment (bookstore_test)
 - Production environment (bookstore_prod)
 
-Default credentials: `postgres/postgres` on `localhost:5432`
+**Note:** Users need to copy `config.example.json` to `config.json` and update credentials. The actual `config.json` is in `.gitignore` for security.
+
+Setup instructions:
+```bash
+cp config/config.example.json config/config.json
+# Then edit config/config.json with your PostgreSQL credentials
+```
 
 ### 4. Created Validation Script
 
@@ -153,6 +159,10 @@ Created a comprehensive validation script that:
 To use these migrations and models:
 
 ```bash
+# 0. Copy and configure database credentials
+cp config/config.example.json config/config.json
+# Edit config/config.json with your PostgreSQL credentials
+
 # 1. Ensure PostgreSQL is running
 # 2. Create the database
 npm run db:create
