@@ -1,0 +1,334 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="ru">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <title>Книга – Описание</title>-->
+<!--  <link rel="stylesheet" href="style.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--  <header>-->
+<!--  <img src="img/logo.png" alt="Логотип магазина" class="logo">-->
+<!--  <nav>-->
+<!--    <ul class="menu">-->
+<!--      <li><a href="index.html">Главная</a></li>-->
+<!--      <li><a href="book.html">Каталог</a></li>-->
+<!--      <li><a href="contacts.html">Контакты</a></li>-->
+<!--      <li><a href="register.html">Регистрация</a></li>-->
+<!--      <li><a href="login.html">Вход</a></li>-->
+<!--    </ul>-->
+<!--  </nav>-->
+<!--</header>-->
+
+
+
+<!--  <main class="container">-->
+<!--    <h1>Информация о книгах</h1>-->
+
+<!--    <nav>-->
+<!--      <a href="#book1">Книга 1</a> |-->
+<!--      <a href="#book2">Книга 2</a> |-->
+<!--      <a href="#book3">Книга 3</a> |-->
+<!--      <a href="#book4">Книга 4</a> |-->
+<!--      <a href="#book5">Книга 5</a> |-->
+<!--      <a href="#book6">Книга 6</a>-->
+<!--    </nav>-->
+
+<!--    <div class="book-card" id="book1">-->
+<!--      <img src="img/book1.jpg" alt="Обложка книги" class="book-cover">-->
+<!--      <div class="book-info">-->
+<!--        <p><strong>Автор:</strong> Маргарет Митчелл</p>-->
+<!--        <p><strong>Описание:</strong> «Унесённые ветром» — это масштабная история о жизни своенравной и целеустремлённой Скарлетт О’Хары на фоне Гражданской войны в США (1861-1865 гг.) и последовавшей за ней Реконструкции Юга. Это роман о любви, выживании и силе духа, но также и о слепоте и невозможности понять истинные чувства до тех пор, пока не станет слишком поздно.</p>-->
+<!--        <p><strong>Состав:</strong> 700 страниц, мягкий переплёт.</p>-->
+<!--        <p id="price1"><strong>Цена:</strong> 900 руб.</p>-->
+<!--        <button class="buy-btn">Заказать</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="book-card" id="book2">-->
+<!--      <img src="img/book2.jpg" alt="Обложка книги" class="book-cover">-->
+<!--      <div class="book-info">-->
+<!--        <p><strong>Автор:</strong> Александр Островский</p>-->
+<!--        <p><strong>Описание:</strong> «Гроза» — это драма о столкновении свободной, чистой личности с жестокими и лицемерными порядками патриархального купеческого общества («тёмного царства»). Главная героиня, Катерина, будучи живой и искренней натурой, не может выжить в атмосфере лжи, тирании и бесправия, что приводит к трагической развязке.</p>-->
+<!--        <p><strong>Состав:</strong> 150 страниц, твёрдый переплёт.</p>-->
+<!--        <p id="price2"><strong>Цена:</strong> 550 руб.</p>-->
+<!--        <button class="buy-btn">Заказать</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="book-card" id="book3">-->
+<!--      <img src="img/book3.jpg" alt="Обложка книги" class="book-cover">-->
+<!--      <div class="book-info">-->
+<!--        <p><strong>Автор:</strong> Алексей Бирюлин</p>-->
+<!--        <p><strong>Описание:</strong> «Море и звезды» — это исторический роман-биография о великом русском флотоводце Адмирале Павле Степановиче Нахимове. Книга прослеживает его жизненный путь от юнги до командующего Черноморским флотом, уделяя особое внимание его роли в Синопском сражении и героической обороне Севастополя во время Крымской войны (1853-1856 гг.).</p>-->
+<!--        <p><strong>Состав:</strong> 1050 страниц, твёрдый переплёт.</p>-->
+<!--        <p id="price3"><strong>Цена:</strong> 1670 руб.</p>-->
+<!--        <button class="buy-btn">Заказать</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="book-card" id="book4">-->
+<!--      <img src="img/book4.jpg" alt="Обложка книги" class="book-cover">-->
+<!--      <div class="book-info">-->
+<!--        <p><strong>Автор:</strong> Александр Беляев</p>-->
+<!--        <p><strong>Описание:</strong> «Человек-амфибия» — научно-фантастическая драма о юноше по имени Ихтиандр, который благодаря пересаженным жабрам акулы может жить под водой. Его уникальность становится причиной трагедии: он оказывается чужим и в мире людей, полном жадности и предательства, и в океане, неспособный полностью порвать с человеческими чувствами.</p>-->
+<!--        <p><strong>Состав:</strong> 350 страниц, твёрдый переплёт.</p>-->
+<!--        <p id="price4"><strong>Цена:</strong> 1750 руб.</p>-->
+<!--        <button class="buy-btn">Заказать</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="book-card" id="book5">-->
+<!--      <img src="img/book5.jpg" alt="Обложка книги" class="book-cover">-->
+<!--      <div class="book-info">-->
+<!--        <p><strong>Автор:</strong> Антуан де Сент-Экзюпери</p>-->
+<!--        <p><strong>Описание:</strong> «Маленький принц» — это философская сказка-притча о самом важном в жизни: о дружбе, любви, ответственности и утрате детской чистоты восприятия мира взрослыми. Это история встречи лётчика, потерпевшего крушение в пустыне, с загадочным мальчиком с другой планеты, который открывает ему простые, но глубокие истины.</p>-->
+<!--        <p><strong>Состав:</strong> 200 страниц, твёрдый переплёт.</p>-->
+<!--        <p id="price5"><strong>Цена:</strong> 890 руб.</p>-->
+<!--        <button class="buy-btn">Заказать</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="book-card" id="book6">-->
+<!--      <img src="img/book6.jpg" alt="Обложка книги" class="book-cover">-->
+<!--      <div class="book-info">-->
+<!--        <p><strong>Автор:</strong> Фрэнсис Скотт Фицджеральд</p>-->
+<!--        <p><strong>Описание:</strong> «Великий Гэтсби» — это трагическая история о американской мечте, иллюзиях и любви. Молодой и загадочный миллионер Джей Гэтсби пытается вернуть прошлое и завоевать сердце замужней аристократки Дэйзи Бьюкенен, но сталкивается с жестокой реальностью, где деньги и статус не могут купить настоящее счастье.</p>-->
+<!--        <p><strong>Состав:</strong> 2050 страниц, твёрдый переплёт.</p>-->
+<!--        <p id="price6"><strong>Цена:</strong> 777 руб.</p>-->
+<!--        <button class="buy-btn">Заказать</button>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </main>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Каталог книг</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Фильтры (из style.css можно убрать дубликаты) */
+    .filters {
+      background: #fff;
+      padding: 25px;
+      margin: 30px 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .filters h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 22px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .filter-group strong {
+      display: block;
+      margin-bottom: 12px;
+      color: #555;
+      font-size: 16px;
+    }
+
+    .filter-group label {
+      margin-right: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #666;
+      transition: color 0.3s;
+    }
+
+    .filter-group label:hover {
+      color: #000;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 6px;
+      transform: scale(1.1);
+    }
+
+    .filter-reset {
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .reset-btn {
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .reset-btn:hover {
+      background: #e33;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="img/logo.png" alt="Логотип магазина" class="logo">
+  <nav>
+    <ul class="menu">
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="book.html" class="active">Каталог</a></li>
+      <li><a href="contacts.html">Контакты</a></li>
+      <li><a href="register.html">Регистрация</a></li>
+      <li><a href="login.html">Вход</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+
+  <h1>Каталог книг</h1>
+
+  <!-- ======= ФИЛЬТР ======= -->
+  <section class="filters">
+    <h2>Фильтрация</h2>
+
+    <form id="filter-form">
+      <div class="filter-group">
+        <strong>Жанр:</strong>
+        <label><input type="checkbox" name="genre" value="romance"> Роман</label>
+        <label><input type="checkbox" name="genre" value="drama"> Драма</label>
+        <label><input type="checkbox" name="genre" value="fantasy"> Фантастика</label>
+        <label><input type="checkbox" name="genre" value="bio"> Биография</label>
+      </div>
+
+      <div class="filter-group">
+        <strong>Автор:</strong>
+        <label><input type="checkbox" name="author" value="russian"> Русский</label>
+        <label><input type="checkbox" name="author" value="foreign"> Зарубежный</label>
+      </div>
+
+      <div class="filter-group">
+        <strong>Цена:</strong>
+        <label><input type="checkbox" name="price" value="price-low"> 500–1000 руб.</label>
+        <label><input type="checkbox" name="price" value="price-high"> 1000–2000 руб.</label>
+      </div>
+
+      <div class="filter-reset">
+        <button type="reset" class="reset-btn">Сбросить фильтр</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ======= КНИГИ ======= -->
+  <section class="books">
+
+    <div class="book-card romance foreign price-low">
+      <img src="img/book1.jpg" alt="Обложка книги" class="book-cover">
+      <div class="book-info">
+        <p><strong>Автор:</strong> Маргарет Митчелл</p>
+        <p><strong>Жанр:</strong> Роман</p>
+        <p><strong>Описание:</strong> «Унесённые ветром» — это масштабная история о жизни своенравной и целеустремлённой Скарлетт О’Хары на фоне Гражданской войны в США (1861-1865 гг.) и последовавшей за ней Реконструкции Юга. Это роман о любви, выживании и силе духа, но также и о слепоте и невозможности понять истинные чувства до тех пор, пока не станет слишком поздно.</p>
+        <p><strong>Цена:</strong> 900 руб.</p>
+        <button class="buy-btn">Заказать</button>
+      </div>
+    </div>
+
+    <div class="book-card drama russian price-low">
+      <img src="img/book2.jpg" alt="Обложка книги" class="book-cover">
+      <div class="book-info">
+        <p><strong>Автор:</strong> Александр Островский</p>
+        <p><strong>Жанр:</strong> Драма</p>
+         <p><strong>Описание:</strong> «Гроза» — это драма о столкновении свободной, чистой личности с жестокими и лицемерными порядками патриархального купеческого общества («тёмного царства»). Главная героиня, Катерина, будучи живой и искренней натурой, не может выжить в атмосфере лжи, тирании и бесправия, что приводит к трагической развязке.</p>
+        <p><strong>Цена:</strong> 550 руб.</p>
+        <button class="buy-btn">Заказать</button>
+      </div>
+    </div>
+
+    <div class="book-card bio russian price-high">
+      <img src="img/book3.jpg" alt="Обложка книги" class="book-cover">
+      <div class="book-info">
+        <p><strong>Автор:</strong> Алексей Бирюлин</p>
+        <p><strong>Жанр:</strong> Биография</p>
+        <p><strong>Описание:</strong> «Море и звезды» — это исторический роман-биография о великом русском флотоводце Адмирале Павле Степановиче Нахимове. Книга прослеживает его жизненный путь от юнги до командующего Черноморским флотом, уделяя особое внимание его роли в Синопском сражении и героической обороне Севастополя во время Крымской войны (1853-1856 гг.).</p>
+        <p><strong>Цена:</strong> 1670 руб.</p>
+        <button class="buy-btn">Заказать</button>
+      </div>
+    </div>
+
+    <div class="book-card fantasy russian price-high">
+      <img src="img/book4.jpg" alt="Обложка книги" class="book-cover">
+      <div class="book-info">
+        <p><strong>Автор:</strong> Александр Беляев</p>
+        <p><strong>Жанр:</strong> Фантастика</p>
+         <p><strong>Описание:</strong> «Человек-амфибия» — научно-фантастическая драма о юноше по имени Ихтиандр, который благодаря пересаженным жабрам акулы может жить под водой. Его уникальность становится причиной трагедии: он оказывается чужим и в мире людей, полном жадности и предательства, и в океане, неспособный полностью порвать с человеческими чувствами.</p>
+        <p><strong>Цена:</strong> 1750 руб.</p>
+        <button class="buy-btn">Заказать</button>
+      </div>
+    </div>
+
+    <div class="book-card romance foreign price-low">
+      <img src="img/book5.jpg" alt="Обложка книги" class="book-cover">
+      <div class="book-info">
+        <p><strong>Автор:</strong> Антуан де Сент-Экзюпери</p>
+        <p><strong>Жанр:</strong> Фантастика</p>
+        <p><strong>Описание:</strong> «Маленький принц» — это философская сказка-притча о самом важном в жизни: о дружбе, любви, ответственности и утрате детской чистоты восприятия мира взрослыми. Это история встречи лётчика, потерпевшего крушение в пустыне, с загадочным мальчиком с другой планеты, который открывает ему простые, но глубокие истины.</p>
+        <p><strong>Цена:</strong> 890 руб.</p>
+        <button class="buy-btn">Заказать</button>
+      </div>
+    </div>
+
+    <div class="book-card drama foreign price-low">
+      <img src="img/book6.jpg" alt="Обложка книги" class="book-cover">
+      <div class="book-info">
+        <p><strong>Автор:</strong> Фрэнсис Скотт Фицджеральд</p>
+        <p><strong>Жанр:</strong> Драма</p>
+        <p><strong>Описание:</strong> «Великий Гэтсби» — это трагическая история о американской мечте, иллюзиях и любви. Молодой и загадочный миллионер Джей Гэтсби пытается вернуть прошлое и завоевать сердце замужней аристократки Дэйзи Бьюкенен, но сталкивается с жестокой реальностью, где деньги и статус не могут купить настоящее счастье.</p>
+        <p><strong>Цена:</strong> 777 руб.</p>
+        <button class="buy-btn">Заказать</button>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<script>
+  const form = document.getElementById('filter-form');
+  const books = document.querySelectorAll('.book-card');
+
+  form.addEventListener('change', () => {
+    const genres = [...form.querySelectorAll('input[name="genre"]:checked')].map(i => i.value);
+    const authors = [...form.querySelectorAll('input[name="author"]:checked')].map(i => i.value);
+    const prices = [...form.querySelectorAll('input[name="price"]:checked')].map(i => i.value);
+
+    books.forEach(book => {
+      let show = true;
+
+      // Фильтр по жанрам
+      if (genres.length && !genres.some(g => book.classList.contains(g))) show = false;
+
+      // Фильтр по авторам
+      if (authors.length && !authors.some(a => book.classList.contains(a))) show = false;
+
+      // Фильтр по цене
+      if (prices.length && !prices.some(p => book.classList.contains(p))) show = false;
+
+      book.style.display = show ? 'flex' : 'none';
+    });
+  });
+
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      books.forEach(book => book.style.display = 'flex');
+    }, 100);
+  });
+</script>
+
+</body>
+</html>

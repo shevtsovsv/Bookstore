@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Тест JSON системы</title>
+  </head>
+  <body>
+    <h1>Тест загрузки JSON</h1>
+    <div id="test-result"></div>
+
+    <script>
+      async function testJSON() {
+        try {
+          const response = await fetch("data/books.json");
+          const data = await response.json();
+          document.getElementById("test-result").innerHTML = `
+          <p>✅ JSON загружен успешно!</p>
+          <p>Найдено книг: ${data.books.length}</p>
+          <pre>${JSON.stringify(data.books[0], null, 2)}</pre>
+        `;
+        } catch (error) {
+          document.getElementById("test-result").innerHTML = `
+          <p>❌ Ошибка: ${error.message}</p>
+        `;
+        }
+      }
+      testJSON();
+    </script>
+  </body>
+</html>

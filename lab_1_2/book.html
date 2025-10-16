@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Каталог книг</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <img src="../lab_1/img/logo.png" alt="Логотип магазина" class="logo" width="140" height="70">
+    <nav>
+      <ul class="menu">
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="book.html" class="active">Каталог</a></li>
+        <li><a href="contacts.html">Контакты</a></li>
+        <li><a href="register.html">Регистрация</a></li>
+        <li><a href="login.html">Вход</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Информация о книгах</h1>
+
+         <nav>
+      <a href="#book1">Книга 1</a> |
+      <a href="#book2">Книга 2</a> |
+      <a href="#book3">Книга 3</a> |
+      <a href="#book4">Книга 4</a> |
+      <a href="#book5">Книга 5</a> |
+      <a href="#book6">Книга 6</a>
+    </nav>
+
+    <div class="filters">
+      <h2>Фильтр</h2>
+
+      <div class="filter-group">
+        <strong>Жанр:</strong>
+        <label for="all-genre"><input type="radio" name="genre" id="all-genre" value="all" checked> Все</label>
+        <label for="romance"><input type="radio" name="genre" id="romance" value="romance"> Романтика</label>
+        <label for="drama"><input type="radio" name="genre" id="drama" value="drama"> Драма</label>
+        <label for="fantasy"><input type="radio" name="genre" id="fantasy" value="fantasy"> Фантастика</label>
+        <label for="bio"><input type="radio" name="genre" id="bio" value="bio"> Биография</label>
+      </div>
+
+      <div class="filter-group">
+        <strong>Цена:</strong>
+        <label for="all-price"><input type="radio" name="price" id="all-price" value="all" checked> Все</label>
+        <label for="price-low"><input type="radio" name="price" id="price-low" value="low"> 500–1000 руб.</label>
+        <label for="price-high"><input type="radio" name="price" id="price-high" value="high"> 1000–2000 руб.</label>
+      </div>
+
+      <div class="filter-group">
+        <strong>Автор:</strong>
+        <label for="all-author"><input type="radio" name="author" id="all-author" value="all" checked> Все</label>
+        <label for="russian"><input type="radio" name="author" id="russian" value="russian"> Русский</label>
+        <label for="foreign"><input type="radio" name="author" id="foreign" value="foreign"> Зарубежный</label>
+      </div>
+    </div>
+
+    <!-- КАРТОЧКИ -->
+    <section class="books">
+      <div id="book1" class="book-card romance foreign price-low">
+        <img src="../lab_1/img/book1.jpg" alt="Унесённые ветром — обложка" class="book-cover" loading="lazy" width="250" height="350">
+        <div class="book-info">
+          <p><strong>Автор:</strong> Маргарет Митчелл</p>
+          <p><strong>Жанр:</strong> Романтика</p>
+          <p><strong>Описание:</strong> «Унесённые ветром» — масштабная история...</p>
+          <p><strong>Цена:</strong> 900 руб.</p>
+          <div>
+            <a href="book1.html" class="buy-btn" aria-label="Подробнее о книге Унесённые ветром">Подробнее</a>
+            <button class="buy-btn" aria-label="Заказать Унесённые ветром">Заказать</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="book2" class="book-card drama russian price-low">
+        <img src="../lab_1/img/book2.jpg" alt="Гроза — обложка" class="book-cover" loading="lazy" width="250" height="350">
+        <div class="book-info">
+          <p><strong>Автор:</strong> Александр Островский</p>
+          <p><strong>Жанр:</strong> Драма</p>
+          <p><strong>Описание:</strong> «Гроза» — драма о столкновении...</p>
+          <p><strong>Цена:</strong> 550 руб.</p>
+          <div>
+            <a href="book2.html" class="buy-btn" aria-label="Подробнее о книге Гроза">Подробнее</a>
+            <button class="buy-btn" aria-label="Заказать Гроза">Заказать</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="book3" class="book-card bio russian price-high">
+        <img src="../lab_1/img/book3.jpg" alt="Море и звезды — обложка" class="book-cover" loading="lazy" width="250" height="350">
+        <div class="book-info">
+          <p><strong>Автор:</strong> Алексей Бирюлин</p>
+          <p><strong>Жанр:</strong> Биография</p>
+          <p><strong>Описание:</strong> «Море и звезды» — исторический роман-биография...</p>
+          <p><strong>Цена:</strong> 1670 руб.</p>
+          <div>
+            <a href="book3.html" class="buy-btn" aria-label="Подробнее о книге Море и звезды">Подробнее</a>
+            <button class="buy-btn" aria-label="Заказать Море и звезды">Заказать</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="book4" class="book-card fantasy russian price-high">
+        <img src="../lab_1/img/book4.jpg" alt="Человек-амфибия — обложка" class="book-cover" loading="lazy" width="250" height="350">
+        <div class="book-info">
+          <p><strong>Автор:</strong> Александр Беляев</p>
+          <p><strong>Жанр:</strong> Фантастика</p>
+          <p><strong>Описание:</strong> «Человек-амфибия» — научно-фантастическая драма...</p>
+          <p><strong>Цена:</strong> 1750 руб.</p>
+          <div>
+            <a href="book4.html" class="buy-btn" aria-label="Подробнее о книге Человек-амфибия">Подробнее</a>
+            <button class="buy-btn" aria-label="Заказать Человек-амфибия">Заказать</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="book5" class="book-card fantasy foreign price-low">
+        <img src="../lab_1/img/book5.jpg" alt="Маленький принц — обложка" class="book-cover" loading="lazy" width="250" height="350">
+        <div class="book-info">
+          <p><strong>Автор:</strong> Антуан де Сент-Экзюпери</p>
+          <p><strong>Жанр:</strong> Фантастика</p>
+          <p><strong>Описание:</strong> «Маленький принц» — философская сказка-притча...</p>
+          <p><strong>Цена:</strong> 890 руб.</p>
+          <div>
+            <a href="book5.html" class="buy-btn" aria-label="Подробнее о книге Маленький принц">Подробнее</a>
+            <button class="buy-btn" aria-label="Заказать Маленький принц">Заказать</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="book6" class="book-card drama foreign price-high">
+        <img src="../lab_1/img/book6.jpg" alt="Великий Гэтсби — обложка" class="book-cover" loading="lazy" width="250" height="350">
+        <div class="book-info">
+          <p><strong>Автор:</strong> Фрэнсис Скотт Фицджеральд</p>
+          <p><strong>Жанр:</strong> Драма</p>
+          <p><strong>Описание:</strong> «Великий Гэтсби» — трагическая история...</p>
+          <p><strong>Цена:</strong> 777 руб.</p>
+          <div>
+            <a href="book6.html" class="buy-btn" aria-label="Подробнее о книге Великий Гэтсби">Подробнее</a>
+            <button class="buy-btn" aria-label="Заказать Великий Гэтсби">Заказать</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="scripts/filters.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вход</title>
+    <link rel="stylesheet" href="../style/style.css" />
+    <script src="../scripts/utils.js"></script>
+    <script src="../scripts/api.js"></script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="../img/logo.png"
+        alt="Логотип магазина"
+        class="logo"
+        width="140"
+        height="70"
+      />
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Главная</a></li>
+          <li><a href="book.html">Каталог</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="register.html">Регистрация</a></li>
+          <li><a href="login.html" class="active">Вход</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="form-wrapper">
+        <h1>Вход в личный кабинет</h1>
+
+        <!-- Сообщения об ошибках/успехе -->
+        <div id="login-messages"></div>
+
+        <form id="login-form" class="form-box">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            placeholder="Введите ваш email"
+            autocomplete="email"
+          />
+
+          <label for="password">Пароль:</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Введите ваш пароль"
+            autocomplete="current-password"
+          />
+
+          <button type="submit" class="form-btn" id="login-btn">
+            <span class="btn-text">Войти</span>
+            <span class="btn-loading" style="display: none">Вход...</span>
+          </button>
+        </form>
+
+        <div class="form-links">
+          <p>Нет аккаунта? <a href="register.html">Зарегистрируйтесь</a></p>
+        </div>
+      </div>
+    </main>
+
+    <script src="../scripts/login.js"></script>
+  </body>
+</html>

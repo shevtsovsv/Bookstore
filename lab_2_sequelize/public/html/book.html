@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Каталог книг</title>
+    <link rel="stylesheet" href="../style/style.css" />
+    <script src="../scripts/utils.js"></script>
+    <script src="../scripts/api.js"></script>
+  </head>
+  <body>
+    <header>
+      <img
+        src="../img/logo.png"
+        alt="Логотип магазина"
+        class="logo"
+        width="140"
+        height="70"
+      />
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Главная</a></li>
+          <li><a href="book.html" class="active">Каталог</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="register.html">Регистрация</a></li>
+          <li><a href="login.html" id="auth-link">Вход</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <!-- Приветствие пользователя -->
+      <div id="user-greeting" style="display: none;">
+        <p>Добро пожаловать, <strong id="user-name"></strong>!</p>
+      </div>
+
+      <div class="catalog-header">
+        <h1>Каталог книг</h1>
+        <div class="catalog-controls">
+          <div class="search-section">
+            <input 
+              type="text" 
+              id="search-input" 
+              placeholder="Поиск по названию или автору..." 
+              class="search-input"
+            />
+            <button id="search-btn" class="btn btn-primary">Найти</button>
+            <button id="clear-search" class="btn btn-secondary" style="display: none;">Сбросить</button>
+          </div>
+          
+          <div class="sort-section">
+            <select id="sort-select" class="sort-select">
+              <option value="created_at_desc" selected>Новые сначала</option>
+              <option value="title_asc">По названию (А-Я)</option>
+              <option value="title_desc">По названию (Я-А)</option>
+              <option value="price_asc">По цене (возрастание)</option>
+              <option value="price_desc">По цене (убывание)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Фильтры -->
+      <div class="filters">
+        <h3>Фильтры</h3>
+        <div class="filters-row">
+          <div class="filter-group">
+            <label>Жанр:</label>
+            <select id="genre-filter">
+              <option value="">Все жанры</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label>Максимальная цена:</label>
+            <input type="range" id="price-range" min="0" max="3000" value="3000" step="100">
+            <span id="price-display">до 3000₽</span>
+          </div>
+          
+          <div class="filter-group">
+            <label>В наличии:</label>
+            <input type="checkbox" id="in-stock-filter" checked>
+            <span>Только в наличии</span>
+          </div>
+          
+          <button id="apply-filters" class="btn btn-primary">Применить фильтры</button>
+        </div>
+
+        <!-- Контейнер для книг -->
+        <section class="books" id="books-container">
+          <!-- Книги будут загружены сюда JavaScript -->
+        </section>
+
+        <!-- Контейнер для пагинации -->
+        <div class="pagination-container" id="pagination-container">
+          <!-- Пагинация будет загружена сюда JavaScript -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Подключение скриптов -->
+    <script src="../scripts/catalog.js"></script>
+  </body>
+</html>
