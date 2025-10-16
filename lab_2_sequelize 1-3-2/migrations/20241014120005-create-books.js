@@ -11,7 +11,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       title: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(500),
         allowNull: false,
       },
       isbn: {
@@ -21,13 +21,13 @@ module.exports = {
       },
       publisher_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "publishers",
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onDelete: "RESTRICT",
       },
       category_id: {
         type: Sequelize.INTEGER,
@@ -52,20 +52,25 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: true,
       },
-      short_description: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
-      image: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
       pages: {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
+      language: {
+        type: Sequelize.STRING(50),
+        allowNull: false,
+        defaultValue: 'ru',
+      },
       publication_year: {
         type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      edition: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      },
+      weight: {
+        type: Sequelize.DECIMAL(8, 3),
         allowNull: true,
       },
       popularity: {
