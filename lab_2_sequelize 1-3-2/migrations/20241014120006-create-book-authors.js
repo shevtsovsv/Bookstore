@@ -32,13 +32,13 @@ module.exports = {
       },
       role: {
         type: Sequelize.ENUM(
-          "main_author",
-          "co_author",
+          "author",
+          "co-author",
           "translator",
           "editor"
         ),
         allowNull: false,
-        defaultValue: "main_author",
+        defaultValue: "author",
       },
       created_at: {
         allowNull: false,

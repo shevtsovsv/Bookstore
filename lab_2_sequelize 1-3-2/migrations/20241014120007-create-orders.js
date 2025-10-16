@@ -18,12 +18,16 @@ module.exports = {
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "RESTRICT",
+        onDelete: "CASCADE",
       },
       order_number: {
         type: Sequelize.STRING(50),
         allowNull: false,
         unique: true,
+      },
+      total_amount: {
+        type: Sequelize.DECIMAL(12, 2),
+        allowNull: false,
       },
       status: {
         type: Sequelize.ENUM(
@@ -36,23 +40,6 @@ module.exports = {
         ),
         allowNull: false,
         defaultValue: "pending",
-      },
-      total_amount: {
-        type: Sequelize.DECIMAL(10, 2),
-        allowNull: false,
-      },
-      shipping_address: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
-      payment_method: {
-        type: Sequelize.ENUM("cash", "card", "bank_transfer", "online"),
-        allowNull: false,
-        defaultValue: "cash",
-      },
-      notes: {
-        type: Sequelize.TEXT,
-        allowNull: true,
       },
       created_at: {
         allowNull: false,
