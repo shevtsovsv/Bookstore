@@ -188,10 +188,8 @@ module.exports = {
         stock: 15,
         description:
           "«Унесённые ветром» — роман американской писательницы Маргарет Митчелл, опубликованный в 1936 году. Действие происходит в штате Джорджия во время Гражданской войны в США и в период Реконструкции Юга.",
-        short_description:
-          "Масштабная история любви на фоне Гражданской войны в США",
-        image: "book1.jpg",
         pages: 704,
+        language: "ru",
         publication_year: 1936,
         popularity: 85,
         created_at: new Date(),
@@ -207,9 +205,8 @@ module.exports = {
         stock: 8,
         description:
           "«Гроза» — пьеса А. Н. Островского в пяти действиях, написанная в 1859 году. Это одно из самых известных произведений русской драматургии.",
-        short_description: "Драма о столкновении старого и нового мира",
-        image: "book2.jpg",
         pages: 128,
+        language: "ru",
         publication_year: 1859,
         popularity: 120,
         created_at: new Date(),
@@ -225,10 +222,8 @@ module.exports = {
         stock: 12,
         description:
           "«Море и звезды» — художественно-документальное произведение о великих мореплавателях и исследователях.",
-        short_description:
-          "Исторический роман-биография о великих мореплавателях",
-        image: "book3.jpg",
         pages: 412,
+        language: "ru",
         publication_year: 2020,
         popularity: 45,
         created_at: new Date(),
@@ -244,9 +239,8 @@ module.exports = {
         stock: 20,
         description:
           "«Человек-амфибия» — научно-фантастический роман Александра Беляева, опубликованный в 1928 году.",
-        short_description: "Научно-фантастическая драма о человеке с жабрами",
-        image: "book4.jpg",
         pages: 256,
+        language: "ru",
         publication_year: 1928,
         popularity: 95,
         created_at: new Date(),
@@ -262,9 +256,8 @@ module.exports = {
         stock: 25,
         description:
           "«Маленький принц» — наиболее известное произведение Антуана де Сент-Экзюпери.",
-        short_description: "Философская сказка-притча о самом важном",
-        image: "book5.jpg",
         pages: 96,
+        language: "ru",
         publication_year: 1943,
         popularity: 150,
         created_at: new Date(),
@@ -280,9 +273,8 @@ module.exports = {
         stock: 0, // Закончился на складе
         description:
           "«Великий Гэтсби» — роман американского писателя Фрэнсиса Скотта Фицджеральда, опубликованный в 1925 году.",
-        short_description: "Трагическая история о американской мечте",
-        image: "book6.jpg",
         pages: 180,
+        language: "ru",
         publication_year: 1925,
         popularity: 78,
         created_at: new Date(),
