@@ -9,31 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // One-to-Many: Пользователь имеет много заказов
-      User.hasMany(models.Order, {
-        foreignKey: "user_id",
-        as: "orders",
-        onDelete: "CASCADE",
-      });
-
-      // One-to-Many: Пользователь имеет много отзывов
-      User.hasMany(models.Review, {
-        foreignKey: "user_id",
-        as: "reviews",
-        onDelete: "CASCADE",
-      });
-
       // One-to-Many: Пользователь имеет много позиций в корзине
       User.hasMany(models.CartItem, {
         foreignKey: "user_id",
         as: "cartItems",
-        onDelete: "CASCADE",
-      });
-
-      // One-to-Many: Пользователь имеет много позиций в списке желаний
-      User.hasMany(models.Wishlist, {
-        foreignKey: "user_id",
-        as: "wishlistItems",
         onDelete: "CASCADE",
       });
 
@@ -43,14 +22,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         otherKey: "book_id",
         as: "cartBooks",
-      });
-
-      // Many-to-Many: Пользователь может иметь много книг в списке желаний через Wishlist
-      User.belongsToMany(models.Book, {
-        through: models.Wishlist,
-        foreignKey: "user_id",
-        otherKey: "book_id",
-        as: "wishlistBooks",
       });
     }
 

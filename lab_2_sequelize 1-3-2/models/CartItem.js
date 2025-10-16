@@ -65,27 +65,7 @@ module.exports = (sequelize, DataTypes) => {
       return await this.updateQuantity(this.quantity - amount);
     }
 
-    async moveToWishlist() {
-      const { Wishlist } = sequelize.models;
 
-      // Проверяем, есть ли уже в списке желаний
-      const existingWishlistItem = await Wishlist.findOne({
-        where: {
-          user_id: this.user_id,
-          book_id: this.book_id,
-        },
-      });
-
-      if (!existingWishlistItem) {
-        await Wishlist.create({
-          user_id: this.user_id,
-          book_id: this.book_id,
-        });
-      }
-
-      // Удаляем из корзины
-      return await this.destroy();
-    }
 
     getAge() {
       const now = new Date();
@@ -100,26 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.getAge() > daysThreshold;
     }
 
-    async createOrderItem(orderId) {
-      const { OrderItem } = sequelize.models;
-      const book = await this.getBook();
 
-      if (!book) {
-        throw new Error("Книга не найдена");
-      }
-
-      if (!(await this.isAvailable())) {
-        throw new Error("Недостаточно товара на складе");
-      }
-
-      return await OrderItem.create({
-        order_id: orderId,
-        book_id: this.book_id,
-        quantity: this.quantity,
-        price_per_item: book.price,
-        total_price: await this.getTotalPrice(),
-      });
-    }
   }
 
   CartItem.init(

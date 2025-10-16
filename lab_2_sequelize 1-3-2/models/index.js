@@ -28,11 +28,7 @@ const Publisher = require("./Publisher")(sequelize, Sequelize.DataTypes);
 const Author = require("./Author")(sequelize, Sequelize.DataTypes);
 const Book = require("./Book")(sequelize, Sequelize.DataTypes);
 const BookAuthor = require("./BookAuthor")(sequelize, Sequelize.DataTypes);
-const Order = require("./Order")(sequelize, Sequelize.DataTypes);
-const OrderItem = require("./OrderItem")(sequelize, Sequelize.DataTypes);
-const Review = require("./Review")(sequelize, Sequelize.DataTypes);
 const CartItem = require("./CartItem")(sequelize, Sequelize.DataTypes);
-const Wishlist = require("./Wishlist")(sequelize, Sequelize.DataTypes);
 
 // Добавляем модели в объект db
 db.User = User;
@@ -41,11 +37,7 @@ db.Publisher = Publisher;
 db.Author = Author;
 db.Book = Book;
 db.BookAuthor = BookAuthor;
-db.Order = Order;
-db.OrderItem = OrderItem;
-db.Review = Review;
 db.CartItem = CartItem;
-db.Wishlist = Wishlist;
 
 // Инициализация ассоциаций
 Object.keys(db).forEach((modelName) => {

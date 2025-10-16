@@ -38,31 +38,10 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
       });
 
-      // One-to-Many: Книга имеет много позиций заказов
-      Book.hasMany(models.OrderItem, {
-        foreignKey: "book_id",
-        as: "orderItems",
-        onDelete: "RESTRICT",
-      });
-
-      // One-to-Many: Книга имеет много отзывов
-      Book.hasMany(models.Review, {
-        foreignKey: "book_id",
-        as: "reviews",
-        onDelete: "CASCADE",
-      });
-
       // One-to-Many: Книга имеет много позиций в корзинах
       Book.hasMany(models.CartItem, {
         foreignKey: "book_id",
         as: "cartItems",
-        onDelete: "CASCADE",
-      });
-
-      // One-to-Many: Книга имеет много позиций в списках желаний
-      Book.hasMany(models.Wishlist, {
-        foreignKey: "book_id",
-        as: "wishlistItems",
         onDelete: "CASCADE",
       });
 
@@ -72,14 +51,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "book_id",
         otherKey: "user_id",
         as: "cartUsers",
-      });
-
-      // Many-to-Many: Книга может быть в списках желаний многих пользователей
-      Book.belongsToMany(models.User, {
-        through: models.Wishlist,
-        foreignKey: "book_id",
-        otherKey: "user_id",
-        as: "wishlistUsers",
       });
     }
 
@@ -118,17 +89,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    async getAverageRating() {
-      const reviews = await this.getReviews();
-      if (reviews.length === 0) return 0;
 
-      const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-      return Math.round((sum / reviews.length) * 10) / 10; // Округление до 1 знака
-    }
-
-    async getReviewsCount() {
-      return await this.countReviews();
-    }
 
     getDiscountedPrice(discountPercent) {
       return Math.round(this.price * (1 - discountPercent / 100) * 100) / 100;
