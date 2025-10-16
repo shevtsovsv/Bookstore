@@ -31,10 +31,6 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: true,
       },
-      address: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-      },
       role: {
         type: Sequelize.ENUM("customer", "admin", "manager"),
         allowNull: false,

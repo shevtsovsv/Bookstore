@@ -18,24 +18,24 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      biography: {
-        type: Sequelize.TEXT,
+      middle_name: {
+        type: Sequelize.STRING(100),
         allowNull: true,
       },
       birth_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       death_date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
       nationality: {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
-      website: {
-        type: Sequelize.STRING(500),
+      biography: {
+        type: Sequelize.TEXT,
         allowNull: true,
       },
       created_at: {

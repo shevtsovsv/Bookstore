@@ -1,0 +1,331 @@
+// Database Schema for Bookstore Application
+// This schema defines 11 tables for a complete e-commerce bookstore
+// Generated from Sequelize models
+
+Project bookstore {
+  database_type: 'PostgreSQL'
+  Note: '''
+    # Bookstore Database Schema
+    Normalized database architecture for an online bookstore
+    - 11 tables
+    - Full e-commerce functionality
+    - Proper foreign key relationships
+  '''
+}
+
+// ========================================
+// MAIN ENTITIES
+// ========================================
+
+Table users {
+  id integer [pk, increment, note: 'Primary Key']
+  first_name varchar(100) [not null]
+  last_name varchar(100) [not null]
+  email varchar(255) [not null, unique, note: 'Unique email for login']
+  password_hash varchar(255) [not null, note: 'Bcrypt hashed password']
+  phone varchar(20) [null, note: 'International phone format']
+  role varchar(20) [not null, default: 'customer', note: 'customer|admin|manager']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    email [unique, name: 'users_email_unique_idx']
+    role [name: 'users_role_idx']
+    created_at [name: 'users_created_at_idx']
+  }
+  
+  Note: 'User accounts with role-based access control'
+}
+
+Table categories {
+  id integer [pk, increment]
+  name varchar(100) [not null, unique]
+  slug varchar(100) [not null, unique, note: 'URL-friendly identifier']
+  description text [null]
+  parent_id integer [null, ref: > categories.id, note: 'Self-referencing for hierarchy']
+  is_active boolean [not null, default: true]
+  sort_order integer [not null, default: 0]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    name [unique, name: 'categories_name_unique_idx']
+    slug [unique, name: 'categories_slug_unique_idx']
+    parent_id [name: 'categories_parent_id_idx']
+    (is_active, sort_order) [name: 'categories_active_sort_idx']
+  }
+  
+  Note: 'Book categories with hierarchical structure'
+}
+
+Table publishers {
+  id integer [pk, increment]
+  name varchar(255) [not null, unique]
+  country varchar(100) [null]
+  website varchar(255) [null, note: 'Publisher website URL']
+  email varchar(255) [null, note: 'Contact email']
+  phone varchar(20) [null, note: 'Contact phone']
+  address text [null, note: 'Physical address']
+  founded_year integer [null, note: 'Year established (1400-current)']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    name [unique, name: 'publishers_name_unique_idx']
+    country [name: 'publishers_country_idx']
+    founded_year [name: 'publishers_founded_year_idx']
+  }
+  
+  Note: 'Publishing houses and companies'
+}
+
+Table authors {
+  id integer [pk, increment]
+  first_name varchar(100) [not null]
+  last_name varchar(100) [not null]
+  middle_name varchar(100) [null, note: 'Optional middle name']
+  birth_date date [null]
+  death_date date [null, note: 'Must be after birth_date']
+  nationality varchar(100) [null]
+  biography text [null, note: 'Author biography']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    (last_name, first_name) [name: 'authors_fullname_idx']
+    nationality [name: 'authors_nationality_idx']
+    birth_date [name: 'authors_birth_date_idx']
+  }
+  
+  Note: 'Book authors with biographical information'
+}
+
+Table books {
+  id integer [pk, increment]
+  title varchar(500) [not null, note: 'Book title']
+  description text [null, note: 'Full book description']
+  isbn varchar(20) [null, unique, note: 'International Standard Book Number']
+  price decimal(10,2) [not null, note: 'Book price (must be >= 0)']
+  stock integer [not null, default: 0, note: 'Available quantity (must be >= 0)']
+  pages integer [null, note: 'Number of pages (must be > 0)']
+  language varchar(50) [not null, default: 'ru', note: 'Book language']
+  publication_year integer [null, note: 'Year published (1400-current)']
+  edition varchar(100) [null, note: 'Edition information']
+  weight decimal(8,3) [null, note: 'Book weight in kg']
+  popularity integer [not null, default: 0, note: 'Sales counter']
+  category_id integer [not null, ref: > categories.id]
+  publisher_id integer [not null, ref: > publishers.id]
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    isbn [unique, name: 'books_isbn_unique_idx', note: 'Partial index where isbn IS NOT NULL']
+    title [name: 'books_title_idx']
+    category_id [name: 'books_category_id_idx']
+    publisher_id [name: 'books_publisher_id_idx']
+    stock [name: 'books_stock_idx']
+    popularity [name: 'books_popularity_idx']
+    price [name: 'books_price_idx']
+    publication_year [name: 'books_publication_year_idx']
+    (category_id, stock) [name: 'books_category_stock_idx']
+  }
+  
+  Note: 'Book catalog with full details'
+}
+
+// ========================================
+// RELATIONSHIP TABLES
+// ========================================
+
+Table book_authors {
+  id integer [pk, increment]
+  book_id integer [not null, ref: > books.id]
+  author_id integer [not null, ref: > authors.id]
+  role varchar(50) [not null, default: 'author', note: 'author|co-author|translator|editor']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    (book_id, author_id, role) [unique, name: 'book_authors_unique_idx']
+    book_id [name: 'book_authors_book_id_idx']
+    author_id [name: 'book_authors_author_id_idx']
+  }
+  
+  Note: 'Many-to-many relationship between books and authors'
+}
+
+// ========================================
+// BUSINESS LOGIC TABLES
+// ========================================
+
+Table orders {
+  id integer [pk, increment]
+  user_id integer [not null, ref: > users.id]
+  order_number varchar(50) [not null, unique, note: 'Unique order identifier']
+  total_amount decimal(12,2) [not null, note: 'Total order value']
+  status varchar(20) [not null, default: 'pending', note: 'pending|confirmed|processing|shipped|delivered|cancelled']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  shipped_at timestamp [null, note: 'Shipping date']
+  delivered_at timestamp [null, note: 'Delivery date']
+  
+  indexes {
+    order_number [unique, name: 'orders_order_number_unique_idx']
+    user_id [name: 'orders_user_id_idx']
+    status [name: 'orders_status_idx']
+    created_at [name: 'orders_created_at_idx']
+    (user_id, status) [name: 'orders_user_status_idx']
+  }
+  
+  Note: 'Customer orders with status tracking'
+}
+
+Table order_items {
+  id integer [pk, increment]
+  order_id integer [not null, ref: > orders.id]
+  book_id integer [not null, ref: > books.id]
+  quantity integer [not null, note: 'Quantity purchased (must be > 0)']
+  price_per_item decimal(10,2) [not null, note: 'Price at time of purchase']
+  total_price decimal(12,2) [not null, note: 'quantity * price_per_item']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    order_id [name: 'order_items_order_id_idx']
+    book_id [name: 'order_items_book_id_idx']
+    (book_id, quantity) [name: 'order_items_book_quantity_idx']
+    (order_id, book_id) [unique, name: 'order_items_order_book_unique_idx']
+  }
+  
+  Note: 'Line items in orders'
+}
+
+Table reviews {
+  id integer [pk, increment]
+  user_id integer [not null, ref: > users.id]
+  book_id integer [not null, ref: > books.id]
+  rating integer [not null, note: 'Rating from 1 to 5']
+  title varchar(255) [null, note: 'Review title']
+  comment text [null, note: 'Review text']
+  is_verified_purchase boolean [not null, default: false, note: 'Verified buyer flag']
+  created_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    book_id [name: 'reviews_book_id_idx']
+    user_id [name: 'reviews_user_id_idx']
+    rating [name: 'reviews_rating_idx']
+    (book_id, rating) [name: 'reviews_book_rating_idx']
+    is_verified_purchase [name: 'reviews_verified_purchase_idx']
+    (user_id, book_id) [unique, name: 'reviews_user_book_unique_idx']
+  }
+  
+  Note: 'Customer reviews and ratings for books'
+}
+
+Table cart_items {
+  id integer [pk, increment]
+  user_id integer [not null, ref: > users.id]
+  book_id integer [not null, ref: > books.id]
+  quantity integer [not null, default: 1, note: 'Quantity in cart (must be > 0)']
+  added_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    user_id [name: 'cart_items_user_id_idx']
+    book_id [name: 'cart_items_book_id_idx']
+    added_at [name: 'cart_items_added_at_idx']
+    (user_id, book_id) [unique, name: 'cart_items_user_book_unique_idx']
+  }
+  
+  Note: 'Shopping cart items'
+}
+
+Table wishlist {
+  id integer [pk, increment]
+  user_id integer [not null, ref: > users.id]
+  book_id integer [not null, ref: > books.id]
+  added_at timestamp [not null, default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    user_id [name: 'wishlist_user_id_idx']
+    book_id [name: 'wishlist_book_id_idx']
+    added_at [name: 'wishlist_added_at_idx']
+    (user_id, book_id) [unique, name: 'wishlist_user_book_unique_idx']
+  }
+  
+  Note: 'User wishlist items'
+}
+
+// ========================================
+// FOREIGN KEY RELATIONSHIPS
+// ========================================
+
+// Categories
+Ref: categories.parent_id > categories.id [delete: set null]
+
+// Books
+Ref: books.category_id > categories.id [delete: restrict]
+Ref: books.publisher_id > publishers.id [delete: restrict]
+
+// Book Authors (Many-to-Many)
+Ref: book_authors.book_id > books.id [delete: cascade]
+Ref: book_authors.author_id > authors.id [delete: cascade]
+
+// Orders
+Ref: orders.user_id > users.id [delete: cascade]
+
+// Order Items
+Ref: order_items.order_id > orders.id [delete: cascade]
+Ref: order_items.book_id > books.id [delete: restrict]
+
+// Reviews
+Ref: reviews.user_id > users.id [delete: cascade]
+Ref: reviews.book_id > books.id [delete: cascade]
+
+// Cart Items
+Ref: cart_items.user_id > users.id [delete: cascade]
+Ref: cart_items.book_id > books.id [delete: cascade]
+
+// Wishlist
+Ref: wishlist.user_id > users.id [delete: cascade]
+Ref: wishlist.book_id > books.id [delete: cascade]
+
+// ========================================
+// NOTES & CONSTRAINTS
+// ========================================
+
+/*
+CASCADE DELETE policies:
+- When user deleted: orders, reviews, cart_items, wishlist are deleted
+- When order deleted: order_items are deleted
+- When book deleted: reviews, cart_items, wishlist are deleted (but NOT order_items)
+- When author/book deleted: book_authors are deleted
+
+RESTRICT DELETE policies:
+- Cannot delete category if books exist in that category
+- Cannot delete publisher if books exist from that publisher  
+- Cannot delete book if order_items exist (historical orders preserved)
+
+CHECK CONSTRAINTS:
+- users.role IN ('customer', 'admin', 'manager')
+- books.price >= 0
+- books.stock >= 0
+- books.pages > 0
+- books.publication_year between 1400 and current year
+- reviews.rating between 1 and 5
+- order_items.quantity > 0
+- cart_items.quantity > 0
+- authors.death_date > authors.birth_date (if both exist)
+
+UNIQUE CONSTRAINTS:
+- users.email
+- categories.name, categories.slug
+- publishers.name
+- books.isbn (where not null)
+- orders.order_number
+- book_authors.(book_id, author_id, role)
+- order_items.(order_id, book_id)
+- reviews.(user_id, book_id)
+- cart_items.(user_id, book_id)
+- wishlist.(user_id, book_id)
+*/

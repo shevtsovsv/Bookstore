@@ -15,28 +15,28 @@ module.exports = {
         allowNull: false,
         unique: true,
       },
-      description: {
-        type: Sequelize.TEXT,
+      country: {
+        type: Sequelize.STRING(100),
         allowNull: true,
       },
       website: {
-        type: Sequelize.STRING(500),
+        type: Sequelize.STRING(255),
         allowNull: true,
       },
-      contact_email: {
+      email: {
         type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      phone: {
+        type: Sequelize.STRING(20),
+        allowNull: true,
+      },
+      address: {
+        type: Sequelize.TEXT,
         allowNull: true,
       },
       founded_year: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-        validate: {
-          min: 1000,
-          max: new Date().getFullYear(),
-        },
-      },
-      country: {
-        type: Sequelize.STRING(100),
         allowNull: true,
       },
       created_at: {
@@ -59,6 +59,10 @@ module.exports = {
 
     await queryInterface.addIndex("publishers", ["country"], {
       name: "publishers_country_idx",
+    });
+
+    await queryInterface.addIndex("publishers", ["founded_year"], {
+      name: "publishers_founded_year_idx",
     });
   },
 
