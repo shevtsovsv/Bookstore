@@ -24,15 +24,8 @@ async function testModels() {
     console.log("\n🔗 Проверка ассоциаций:");
 
     // Проверяем ассоциации для упрощённых моделей
-    const {
-      User,
-      Book,
-      Category,
-      Author,
-      Publisher,
-      CartItem,
-      BookAuthor,
-    } = sequelize.models;
+    const { User, Book, Category, Author, Publisher, CartItem, BookAuthor } =
+      sequelize.models;
 
     console.log(
       `  - User ассоциации: ${Object.keys(User.associations).join(", ")}`
@@ -70,9 +63,7 @@ async function testModels() {
       `  - Основные сущности: User, Category, Publisher, Author, Book`
     );
     console.log(`  - Связующие таблицы: BookAuthor`);
-    console.log(
-      `  - Функциональность: CartItem (корзина покупок)`
-    );
+    console.log(`  - Функциональность: CartItem (корзина покупок)`);
 
     console.log("\n✅ Все модели загружены и ассоциации настроены корректно!");
     console.log("🎯 Готово для запуска миграций и создания таблиц в БД");

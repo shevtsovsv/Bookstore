@@ -89,8 +89,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-
-
     getDiscountedPrice(discountPercent) {
       return Math.round(this.price * (1 - discountPercent / 100) * 100) / 100;
     }

@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     // 1. Категории
     await queryInterface.bulkInsert("categories", [
       {
@@ -66,9 +66,10 @@ module.exports = {
         isbn: "978-5-389-12345-1",
         publisher_id: 1,
         category_id: 2,
-        price: 1750.00,
+        price: 1750.0,
         stock: 5,
-        description: "«Унесённые ветром» — роман Маргарет Митчелл, опубликованный в 1936 году.",
+        description:
+          "«Унесённые ветром» — роман Маргарет Митчелл, опубликованный в 1936 году.",
         pages: 1037,
         publication_year: 1936,
         popularity: 210,
@@ -95,7 +96,8 @@ module.exports = {
         first_name: "Администратор",
         last_name: "Системы",
         email: "admin@bookstore.com",
-        password_hash: "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/JG0QE6jAS",
+        password_hash:
+          "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/JG0QE6jAS",
         phone: "+7-900-123-45-67",
         role: "admin",
         created_at: new Date(),
@@ -106,7 +108,8 @@ module.exports = {
         first_name: "Иван",
         last_name: "Петров",
         email: "user@example.com",
-        password_hash: "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/JG0QE6jAS",
+        password_hash:
+          "$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj/JG0QE6jAS",
         phone: "+7-900-345-67-89",
         role: "customer",
         created_at: new Date(),
@@ -125,7 +128,7 @@ module.exports = {
     ]);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     // Удаляем данные в обратном порядке (из-за foreign key constraints)
     await queryInterface.bulkDelete("cart_items", null, {});
     await queryInterface.bulkDelete("users", null, {});
@@ -134,5 +137,5 @@ module.exports = {
     await queryInterface.bulkDelete("authors", null, {});
     await queryInterface.bulkDelete("publishers", null, {});
     await queryInterface.bulkDelete("categories", null, {});
-  }
+  },
 };
