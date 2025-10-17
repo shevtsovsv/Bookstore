@@ -1,12 +1,12 @@
 /**
- * Тестовый скрипт для проверки работы всех моделей (10 таблиц)
+ * Тестовый скрипт для проверки работы упрощённых моделей (7 таблиц)
  * Запуск: node test-models.js
  */
 
 const { sequelize } = require("./models");
 
 async function testModels() {
-  console.log("🚀 Тестирование новых моделей Sequelize (10 таблиц)...\n");
+  console.log("🚀 Тестирование упрощённых моделей Sequelize (7 таблиц)...\n");
 
   try {
     console.log("🔄 Проверка подключения к базе данных...");
@@ -23,19 +23,15 @@ async function testModels() {
 
     console.log("\n🔗 Проверка ассоциаций:");
 
-    // Проверяем ассоциации для основных моделей
+    // Проверяем ассоциации для упрощённых моделей
     const {
       User,
       Book,
       Category,
       Author,
-      Order,
       Publisher,
-      Review,
       CartItem,
-      Wishlist,
       BookAuthor,
-      OrderItem,
     } = sequelize.models;
 
     console.log(
@@ -53,15 +49,9 @@ async function testModels() {
       `  - Author ассоциации: ${Object.keys(Author.associations).join(", ")}`
     );
     console.log(
-      `  - Order ассоциации: ${Object.keys(Order.associations).join(", ")}`
-    );
-    console.log(
       `  - Publisher ассоциации: ${Object.keys(Publisher.associations).join(
         ", "
       )}`
-    );
-    console.log(
-      `  - Review ассоциации: ${Object.keys(Review.associations).join(", ")}`
     );
     console.log(
       `  - CartItem ассоциации: ${Object.keys(CartItem.associations).join(
@@ -69,17 +59,7 @@ async function testModels() {
       )}`
     );
     console.log(
-      `  - Wishlist ассоциации: ${Object.keys(Wishlist.associations).join(
-        ", "
-      )}`
-    );
-    console.log(
       `  - BookAuthor ассоциации: ${Object.keys(BookAuthor.associations).join(
-        ", "
-      )}`
-    );
-    console.log(
-      `  - OrderItem ассоциации: ${Object.keys(OrderItem.associations).join(
         ", "
       )}`
     );
@@ -91,7 +71,7 @@ async function testModels() {
     );
     console.log(`  - Связующие таблицы: BookAuthor`);
     console.log(
-      `  - Бизнес-логика: Order, OrderItem, Review, CartItem, Wishlist`
+      `  - Функциональность: CartItem (корзина покупок)`
     );
 
     console.log("\n✅ Все модели загружены и ассоциации настроены корректно!");

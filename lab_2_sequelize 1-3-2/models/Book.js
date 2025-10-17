@@ -195,15 +195,6 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      language: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        defaultValue: "ru",
-        validate: {
-          notEmpty: true,
-          len: [1, 50],
-        },
-      },
       publication_year: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -213,21 +204,6 @@ module.exports = (sequelize, DataTypes) => {
             return new Date().getFullYear();
           },
           isInt: true,
-        },
-      },
-      edition: {
-        type: DataTypes.STRING(100),
-        allowNull: true,
-        validate: {
-          len: [0, 100],
-        },
-      },
-      weight: {
-        type: DataTypes.DECIMAL(8, 3),
-        allowNull: true,
-        validate: {
-          min: 0,
-          isDecimal: true,
         },
       },
       popularity: {
@@ -345,11 +321,6 @@ module.exports = (sequelize, DataTypes) => {
         byPublisher: (publisherId) => ({
           where: {
             publisher_id: publisherId,
-          },
-        }),
-        byLanguage: (language) => ({
-          where: {
-            language: language,
           },
         }),
         newReleases: {
