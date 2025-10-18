@@ -22,6 +22,24 @@ app.use(express.urlencoded({ extended: true }));
 // Статические файлы
 app.use(express.static(path.join(__dirname, 'public')));
 
+// API маршруты
+const apiRoutes = require('./src/routes/api');
+const authRoutes = require('./src/routes/auth');
+const booksRoutes = require('./src/routes/books');
+const categoriesRoutes = require('./src/routes/categories');
+const publishersRoutes = require('./src/routes/publishers');
+const authorsRoutes = require('./src/routes/authors');
+const cartRoutes = require('./src/routes/cart');
+
+// Подключение API маршрутов
+app.use('/api', apiRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/books', booksRoutes);
+app.use('/api/categories', categoriesRoutes);
+app.use('/api/publishers', publishersRoutes);
+app.use('/api/authors', authorsRoutes);
+app.use('/api/cart', cartRoutes);
+
 // Базовый роут для проверки сервера
 app.get('/api/health', (req, res) => {
   res.json({ 
