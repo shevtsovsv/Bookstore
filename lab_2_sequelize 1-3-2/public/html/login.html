@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вход</title>
+    <link rel="stylesheet" href="../style/style.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        src="../img/logo.png"
+        alt="Логотип магазина"
+        class="logo"
+        width="140"
+        height="70"
+      />
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Главная</a></li>
+          <li><a href="book.html">Каталог</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="register.html">Регистрация</a></li>
+          <li><a href="login.html" class="active">Вход</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="form-wrapper">
+        <h1>Вход</h1>
+        <form action="/cgi-bin/login.py" method="post" class="form-box">
+          <label for="username">Логин</label>
+          <input type="text" id="username" name="username" required />
+
+          <label for="password">Пароль</label>
+          <input type="password" id="password" name="password" required />
+
+          <button type="submit" class="form-btn" aria-label="Войти">
+            Войти
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

@@ -2,33 +2,33 @@
 const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  class Cart extends Model {
+  class CartItem extends Model {
     /**
      * Helper method for defining associations.
      */
     static associate(models) {
       // Связь с пользователем: товар в корзине принадлежит одному пользователю
-      Cart.belongsTo(models.User, {
-        foreignKey: 'userId',
+      CartItem.belongsTo(models.User, {
+        foreignKey: 'user_id',
         as: 'user'
       });
 
       // Связь с книгой: товар в корзине ссылается на одну книгу
-      Cart.belongsTo(models.Book, {
-        foreignKey: 'bookId',
+      CartItem.belongsTo(models.Book, {
+        foreignKey: 'book_id',
         as: 'book'
       });
     }
   }
 
-  Cart.init({
+  CartItem.init({
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false
     },
-    userId: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
         key: 'id'
       }
     },
-    bookId: {
+    book_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -54,10 +54,12 @@ module.exports = (sequelize) => {
     }
   }, {
     sequelize,
-    modelName: 'Cart',
+    modelName: 'CartItem',
     tableName: 'cart',
-    timestamps: true
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
 
-  return Cart;
+  return CartItem;
 };
