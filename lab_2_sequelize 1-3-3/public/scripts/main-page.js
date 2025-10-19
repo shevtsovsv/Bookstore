@@ -167,9 +167,15 @@ function displayStoreStats(stats) {
     <div class="stat-item genres">
       <div class="stat-label">Популярные жанры (продано)</div>
       <div class="genres-list">
-        ${genres.slice(0, 3).map(genre => 
-          `<span class="genre-tag">${escapeHtml(genre.name)} (${genre.count})</span>`
-        ).join("")}
+        ${genres
+          .slice(0, 3)
+          .map(
+            (genre) =>
+              `<span class="genre-tag">${escapeHtml(genre.name)} (${
+                genre.count
+              })</span>`
+          )
+          .join("")}
       </div>
     </div>
   `;

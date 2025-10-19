@@ -289,31 +289,41 @@ const getStats = async (req, res) => {
 
     // Общая статистика по книгам
     const totalBooks = await Book.count();
-    
+
     // Количество категорий (жанров)
     const totalGenres = await Category.count();
-    
+
     // Общее количество проданных книг (сумма всех popularity)
-    const totalSoldResult = await Book.sum('popularity');
+    const totalSoldResult = await Book.sum("popularity");
     const totalSold = totalSoldResult || 0;
 
     // Популярные жанры по количеству проданных книг
     const genresWithSales = await Category.findAll({
       attributes: [
-        'id',
-        'name',
+        "id",
+        "name",
         // Сумма popularity (проданных книг) в каждой категории
-        [Book.sequelize.fn('SUM', Book.sequelize.col('books.popularity')), 'totalSold']
+        [
+          Book.sequelize.fn("SUM", Book.sequelize.col("books.popularity")),
+          "totalSold",
+        ],
       ],
-      include: [{
-        model: Book,
-        as: 'books', // Указываем правильный алиас для ассоциации
-        attributes: [],
-        required: true // INNER JOIN - только категории с книгами
-      }],
-      group: ['Category.id', 'Category.name'],
-      order: [[Book.sequelize.fn('SUM', Book.sequelize.col('books.popularity')), 'DESC']],
-      raw: true
+      include: [
+        {
+          model: Book,
+          as: "books", // Указываем правильный алиас для ассоциации
+          attributes: [],
+          required: true, // INNER JOIN - только категории с книгами
+        },
+      ],
+      group: ["Category.id", "Category.name"],
+      order: [
+        [
+          Book.sequelize.fn("SUM", Book.sequelize.col("books.popularity")),
+          "DESC",
+        ],
+      ],
+      raw: true,
     });
 
     // Форматируем данные для ответа
@@ -321,12 +331,12 @@ const getStats = async (req, res) => {
       books: {
         totalBooks,
         totalGenres,
-        totalSold: Math.round(totalSold)
+        totalSold: Math.round(totalSold),
       },
-      genres: genresWithSales.map(genre => ({
+      genres: genresWithSales.map((genre) => ({
         name: genre.name,
-        count: Math.round(parseInt(genre.totalSold) || 0)
-      }))
+        count: Math.round(parseInt(genre.totalSold) || 0),
+      })),
     };
 
     console.log("Статистика собрана:", stats);
