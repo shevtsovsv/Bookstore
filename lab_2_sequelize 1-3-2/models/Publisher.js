@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // One-to-Many: Издательство имеет много книг
       Publisher.hasMany(models.Book, {
-        foreignKey: "publisher_id",
+        foreignKey: "publisherId",
         as: "books",
         onDelete: "RESTRICT",
       });

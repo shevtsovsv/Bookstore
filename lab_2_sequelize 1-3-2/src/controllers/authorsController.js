@@ -1,6 +1,12 @@
-const { Author, BookAuthor, Book, Publisher, Category } = require('../../models');
-const { validationResult } = require('express-validator');
-const { Op } = require('sequelize');
+const {
+  Author,
+  BookAuthor,
+  Book,
+  Publisher,
+  Category,
+} = require("../../models");
+const { validationResult } = require("express-validator");
+const { Op } = require("sequelize");
 
 /**
  * Получение списка авторов с пагинацией
@@ -9,39 +15,32 @@ const getAuthors = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const search = req.query.search || '';
+    const search = req.query.search || "";
+    const authorType = req.query.authorType || "";
     const offset = (page - 1) * limit;
 
     let whereClause = {};
     if (search.trim()) {
-      whereClause = {
-        [Op.or]: [
-          { first_name: { [Op.iLike]: `%${search}%` } },
-          { last_name: { [Op.iLike]: `%${search}%` } },
-          { biography: { [Op.iLike]: `%${search}%` } }
-        ]
-      };
+      whereClause.name = { [Op.iLike]: `%${search}%` };
+    }
+
+    if (authorType && ["russian", "foreign"].includes(authorType)) {
+      whereClause.authorType = authorType;
     }
 
     const { count, rows: authors } = await Author.findAndCountAll({
       where: whereClause,
       limit,
       offset,
-      order: [['last_name', 'ASC'], ['first_name', 'ASC']],
+      order: [["name", "ASC"]],
       include: [
         {
-          model: BookAuthor,
-          as: 'bookAuthors',
-          attributes: ['book_id'],
-          include: [
-            {
-              model: Book,
-              as: 'book',
-              attributes: ['id', 'title']
-            }
-          ]
-        }
-      ]
+          model: Book,
+          as: "books",
+          attributes: ["id", "title"],
+          through: { attributes: [] }, // Исключаем атрибуты связующей таблицы
+        },
+      ],
     });
 
     const totalPages = Math.ceil(count / limit);
@@ -49,18 +48,17 @@ const getAuthors = async (req, res) => {
     res.json({
       success: true,
       data: {
-        authors: authors.map(author => ({
+        authors: authors.map((author) => ({
           id: author.id,
-          firstName: author.first_name,
-          lastName: author.last_name,
-          fullName: `${author.first_name} ${author.last_name}`.trim(),
-          birthDate: author.birth_date,
-          deathDate: author.death_date,
-          nationality: author.nationality,
-          biography: author.biography ? author.biography.substring(0, 200) + (author.biography.length > 200 ? '...' : '') : null,
-          booksCount: author.bookAuthors ? author.bookAuthors.length : 0,
-          createdAt: author.created_at,
-          updatedAt: author.updated_at
+          name: author.name,
+          bio: author.bio
+            ? author.bio.substring(0, 200) +
+              (author.bio.length > 200 ? "..." : "")
+            : null,
+          authorType: author.authorType,
+          booksCount: author.books ? author.books.length : 0,
+          createdAt: author.createdAt,
+          updatedAt: author.updatedAt,
         })),
         pagination: {
           currentPage: page,
@@ -68,16 +66,15 @@ const getAuthors = async (req, res) => {
           totalItems: count,
           itemsPerPage: limit,
           hasNext: page < totalPages,
-          hasPrev: page > 1
-        }
-      }
+          hasPrev: page > 1,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get authors error:', error);
+    console.error("Get authors error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения авторов'
+      message: "Ошибка получения авторов",
     });
   }
 };
@@ -92,84 +89,79 @@ const getAuthorById = async (req, res) => {
     const author = await Author.findByPk(id, {
       include: [
         {
-          model: BookAuthor,
-          as: 'bookAuthors',
+          model: Book,
+          as: "books",
+          through: { attributes: [] },
           include: [
             {
-              model: Book,
-              as: 'book',
-              attributes: ['id', 'title', 'description', 'price', 'publication_year', 'isbn', 'pages', 'stock', 'image'],
-              include: [
-                {
-                  model: Publisher,
-                  as: 'publisher',
-                  attributes: ['id', 'name']
-                },
-                {
-                  model: Category,
-                  as: 'category',
-                  attributes: ['id', 'name']
-                }
-              ]
-            }
-          ]
-        }
-      ]
+              model: Publisher,
+              as: "publisher",
+              attributes: ["id", "name"],
+            },
+            {
+              model: Category,
+              as: "category",
+              attributes: ["id", "name"],
+            },
+          ],
+        },
+      ],
     });
 
     if (!author) {
       return res.status(404).json({
         success: false,
-        message: 'Автор не найден'
+        message: "Автор не найден",
       });
     }
 
     // Обрабатываем книги автора
-    const books = author.bookAuthors ? author.bookAuthors.map(ba => ({
-      id: ba.book.id,
-      title: ba.book.title,
-      description: ba.book.description,
-      price: parseFloat(ba.book.price),
-      publicationYear: ba.book.publication_year,
-      isbn: ba.book.isbn,
-      pages: ba.book.pages,
-      stock: ba.book.stock,
-      image: ba.book.image,
-      publisher: ba.book.publisher ? {
-        id: ba.book.publisher.id,
-        name: ba.book.publisher.name
-      } : null,
-      category: ba.book.category ? {
-        id: ba.book.category.id,
-        name: ba.book.category.name
-      } : null
-    })) : [];
+    const books = author.books
+      ? author.books.map((book) => ({
+          id: book.id,
+          title: book.title,
+          description: book.description,
+          price: parseFloat(book.price),
+          publicationYear: book.publicationYear,
+          isbn: book.isbn,
+          pages: book.pages,
+          stock: book.stock,
+          image: book.image,
+          publisher: book.publisher
+            ? {
+                id: book.publisher.id,
+                name: book.publisher.name,
+              }
+            : null,
+          category: book.category
+            ? {
+                id: book.category.id,
+                name: book.category.name,
+              }
+            : null,
+        }))
+      : [];
 
     res.json({
       success: true,
       data: {
         author: {
           id: author.id,
-          firstName: author.first_name,
-          lastName: author.last_name,
-          fullName: `${author.first_name} ${author.last_name}`.trim(),
-          birthDate: author.birth_date,
-          deathDate: author.death_date,
-          nationality: author.nationality,
-          biography: author.biography,
-          createdAt: author.created_at,
-          updatedAt: author.updated_at,
+          name: author.name,
+          bio: author.bio,
+          authorType: author.authorType,
+          createdAt: author.createdAt,
+          updatedAt: author.updatedAt,
           booksCount: books.length,
-          books: books.sort((a, b) => b.publicationYear - a.publicationYear) // Сортируем по году издания
-        }
-      }
+          books: books.sort((a, b) => b.publicationYear - a.publicationYear), // Сортируем по году издания
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get author by ID error:', error);
+    console.error("Get author by ID error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения автора'
+      message: "Ошибка получения автора",
     });
   }
 };
@@ -189,57 +181,61 @@ const getAuthorBooks = async (req, res) => {
     if (!author) {
       return res.status(404).json({
         success: false,
-        message: 'Автор не найден'
+        message: "Автор не найден",
       });
     }
 
-    // Получаем книги через связующую таблицу
-    const { count, rows: bookAuthors } = await BookAuthor.findAndCountAll({
-      where: { author_id: id },
+    // Получаем книги автора через ассоциацию
+    const { count, rows: books } = await Book.findAndCountAll({
       limit,
       offset,
       include: [
         {
-          model: Book,
-          as: 'book',
-          include: [
-            {
-              model: Publisher,
-              as: 'publisher',
-              attributes: ['id', 'name']
-            },
-            {
-              model: Category,
-              as: 'category',
-              attributes: ['id', 'name']
-            }
-          ]
-        }
+          model: Author,
+          as: "authors",
+          where: { id: id },
+          through: { attributes: [] },
+          attributes: [],
+        },
+        {
+          model: Publisher,
+          as: "publisher",
+          attributes: ["id", "name"],
+        },
+        {
+          model: Category,
+          as: "category",
+          attributes: ["id", "name"],
+        },
       ],
-      order: [[{model: Book, as: 'book'}, 'publication_year', 'DESC']]
+      order: [["publicationYear", "DESC"]],
     });
 
     const totalPages = Math.ceil(count / limit);
 
-    const books = bookAuthors.map(ba => ({
-      id: ba.book.id,
-      title: ba.book.title,
-      description: ba.book.description,
-      price: parseFloat(ba.book.price),
-      publicationYear: ba.book.publication_year,
-      isbn: ba.book.isbn,
-      pages: ba.book.pages,
-      stock: ba.book.stock,
-      image: ba.book.image,
-      publisher: ba.book.publisher ? {
-        id: ba.book.publisher.id,
-        name: ba.book.publisher.name
-      } : null,
-      category: ba.book.category ? {
-        id: ba.book.category.id,
-        name: ba.book.category.name
-      } : null,
-      createdAt: ba.book.created_at
+    const formattedBooks = books.map((book) => ({
+      id: book.id,
+      title: book.title,
+      description: book.description,
+      price: parseFloat(book.price),
+      publicationYear: book.publicationYear,
+      isbn: book.isbn,
+      pages: book.pages,
+      stock: book.stock,
+      image: book.image,
+      publisher: book.publisher
+        ? {
+            id: book.publisher.id,
+            name: book.publisher.name,
+          }
+        : null,
+      category: book.category
+        ? {
+            id: book.category.id,
+            name: book.category.name,
+          }
+        : null,
+      createdAt: book.createdAt,
     }));
 
     res.json({
@@ -247,27 +243,25 @@ const getAuthorBooks = async (req, res) => {
       data: {
         author: {
           id: author.id,
-          firstName: author.first_name,
-          lastName: author.last_name,
-          fullName: `${author.first_name} ${author.last_name}`.trim()
+          name: author.name,
+          authorType: author.authorType,
         },
-        books,
+        books: formattedBooks,
         pagination: {
           currentPage: page,
           totalPages,
           totalItems: count,
           itemsPerPage: limit,
           hasNext: page < totalPages,
-          hasPrev: page > 1
-        }
-      }
+          hasPrev: page > 1,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get author books error:', error);
+    console.error("Get author books error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения книг автора'
+      message: "Ошибка получения книг автора",
     });
   }
 };
@@ -281,81 +275,66 @@ const createAuthor = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
-    const {
-      firstName,
-      lastName,
-      birthDate,
-      deathDate,
-      nationality,
-      biography
-    } = req.body;
+    const { name, bio, authorType } = req.body;
 
-    // Проверяем логичность дат
-    if (birthDate && deathDate && new Date(birthDate) > new Date(deathDate)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Дата рождения не может быть позже даты смерти'
-      });
-    }
-
-    // Проверяем уникальность автора (имя + фамилия + дата рождения)
-    const whereClause = {
-      first_name: firstName.trim(),
-      last_name: lastName.trim()
-    };
-    
-    if (birthDate) {
-      whereClause.birth_date = birthDate;
-    }
-
+    // Проверяем уникальность автора по имени
     const existingAuthor = await Author.findOne({
-      where: whereClause
+      where: { name: name.trim() },
     });
 
     if (existingAuthor) {
       return res.status(400).json({
         success: false,
-        message: 'Автор с такими данными уже существует'
+        message: "Автор с таким именем уже существует",
       });
     }
 
     const author = await Author.create({
-      first_name: firstName.trim(),
-      last_name: lastName.trim(),
-      birth_date: birthDate || null,
-      death_date: deathDate || null,
-      nationality: nationality?.trim() || null,
-      biography: biography?.trim() || null
+      name: name.trim(),
+      bio: bio?.trim() || null,
+      authorType: authorType || "russian",
     });
 
     res.status(201).json({
       success: true,
-      message: 'Автор успешно создан',
+      message: "Автор успешно создан",
       data: {
         author: {
           id: author.id,
-          firstName: author.first_name,
-          lastName: author.last_name,
-          fullName: `${author.first_name} ${author.last_name}`.trim(),
-          birthDate: author.birth_date,
-          deathDate: author.death_date,
-          nationality: author.nationality,
-          biography: author.biography,
-          createdAt: author.created_at
-        }
-      }
+          name: author.name,
+          bio: author.bio,
+          authorType: author.authorType,
+          createdAt: author.createdAt,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Create author error:', error);
+    console.error("Create author error:", error);
+
+    // Обработка специфических ошибок Sequelize
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        success: false,
+        message: "Автор с таким именем уже существует",
+      });
+    }
+
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных",
+        errors: error.errors.map((err) => err.message),
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: 'Ошибка создания автора'
+      message: "Ошибка создания автора",
     });
   }
 };
@@ -369,97 +348,81 @@ const updateAuthor = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
     const { id } = req.params;
-    const {
-      firstName,
-      lastName,
-      birthDate,
-      deathDate,
-      nationality,
-      biography
-    } = req.body;
+    const { name, bio, authorType } = req.body;
 
     const author = await Author.findByPk(id);
     if (!author) {
       return res.status(404).json({
         success: false,
-        message: 'Автор не найден'
+        message: "Автор не найден",
       });
     }
 
-    // Проверяем логичность дат
-    const newBirthDate = birthDate !== undefined ? birthDate : author.birth_date;
-    const newDeathDate = deathDate !== undefined ? deathDate : author.death_date;
-    
-    if (newBirthDate && newDeathDate && new Date(newBirthDate) > new Date(newDeathDate)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Дата рождения не может быть позже даты смерти'
-      });
-    }
-
-    // Проверяем уникальность (исключая текущего автора)
-    if (firstName || lastName || birthDate !== undefined) {
-      const whereClause = {
-        first_name: firstName?.trim() || author.first_name,
-        last_name: lastName?.trim() || author.last_name,
-        id: { [Op.ne]: id }
-      };
-      
-      if (newBirthDate) {
-        whereClause.birth_date = newBirthDate;
-      }
-
+    // Проверяем уникальность имени (исключая текущего автора)
+    if (name && name.trim() !== author.name) {
       const existingAuthor = await Author.findOne({
-        where: whereClause
+        where: {
+          name: name.trim(),
+          id: { [Op.ne]: id },
+        },
       });
 
       if (existingAuthor) {
         return res.status(400).json({
           success: false,
-          message: 'Автор с такими данными уже существует'
+          message: "Автор с таким именем уже существует",
         });
       }
     }
 
     // Обновляем поля
     await author.update({
-      first_name: firstName?.trim() || author.first_name,
-      last_name: lastName?.trim() || author.last_name,
-      birth_date: birthDate !== undefined ? birthDate : author.birth_date,
-      death_date: deathDate !== undefined ? deathDate : author.death_date,
-      nationality: nationality?.trim() || author.nationality,
-      biography: biography?.trim() || author.biography
+      name: name?.trim() || author.name,
+      bio: bio !== undefined ? bio?.trim() || null : author.bio,
+      authorType: authorType || author.authorType,
     });
 
     res.json({
       success: true,
-      message: 'Автор успешно обновлён',
+      message: "Автор успешно обновлён",
       data: {
         author: {
           id: author.id,
-          firstName: author.first_name,
-          lastName: author.last_name,
-          fullName: `${author.first_name} ${author.last_name}`.trim(),
-          birthDate: author.birth_date,
-          deathDate: author.death_date,
-          nationality: author.nationality,
-          biography: author.biography,
-          updatedAt: author.updated_at
-        }
-      }
+          name: author.name,
+          bio: author.bio,
+          authorType: author.authorType,
+          updatedAt: author.updatedAt,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Update author error:', error);
+    console.error("Update author error:", error);
+
+    // Обработка специфических ошибок Sequelize
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        success: false,
+        message: "Автор с таким именем уже существует",
+      });
+    }
+
+    if (error.name === "SequelizeValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: "Ошибка валидации данных",
+        errors: error.errors.map((err) => err.message),
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: 'Ошибка обновления автора'
+      message: "Ошибка обновления автора",
     });
   }
 };
@@ -474,25 +437,26 @@ const deleteAuthor = async (req, res) => {
     const author = await Author.findByPk(id, {
       include: [
         {
-          model: BookAuthor,
-          as: 'bookAuthors',
-          attributes: ['id']
-        }
-      ]
+          model: Book,
+          as: "books",
+          attributes: ["id"],
+          through: { attributes: [] },
+        },
+      ],
     });
 
     if (!author) {
       return res.status(404).json({
         success: false,
-        message: 'Автор не найден'
+        message: "Автор не найден",
       });
     }
 
     // Проверяем, есть ли связанные книги
-    if (author.bookAuthors && author.bookAuthors.length > 0) {
+    if (author.books && author.books.length > 0) {
       return res.status(400).json({
         success: false,
-        message: `Невозможно удалить автора. У него есть ${author.bookAuthors.length} связанных книг`
+        message: `Невозможно удалить автора. У него есть ${author.books.length} связанных книг`,
       });
     }
 
@@ -500,14 +464,13 @@ const deleteAuthor = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Автор успешно удалён'
+      message: "Автор успешно удалён",
     });
-
   } catch (error) {
-    console.error('Delete author error:', error);
+    console.error("Delete author error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка удаления автора'
+      message: "Ошибка удаления автора",
     });
   }
 };
@@ -518,5 +481,5 @@ module.exports = {
   getAuthorBooks,
   createAuthor,
   updateAuthor,
-  deleteAuthor
+  deleteAuthor,
 };

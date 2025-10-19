@@ -9,27 +9,27 @@ module.exports = (sequelize) => {
     static associate(models) {
       // Связь с категорией: книга принадлежит одной категории
       Book.belongsTo(models.Category, {
-        foreignKey: 'category_id',
+        foreignKey: 'categoryId',
         as: 'category'
       });
 
       // Связь с издательством: книга принадлежит одному издательству
       Book.belongsTo(models.Publisher, {
-        foreignKey: 'publisher_id',
+        foreignKey: 'publisherId',
         as: 'publisher'
       });
 
       // Связь многие-ко-многим с авторами через таблицу book_authors
       Book.belongsToMany(models.Author, {
         through: models.BookAuthor,
-        foreignKey: 'book_id',
-        otherKey: 'author_id',
+        foreignKey: 'bookId',
+        otherKey: 'authorId',
         as: 'authors'
       });
 
       // Связь с корзиной: книга может быть в корзине у многих пользователей
       Book.hasMany(models.CartItem, {
-        foreignKey: 'book_id',
+        foreignKey: 'bookId',
         as: 'cartItems'
       });
     }
@@ -54,6 +54,14 @@ module.exports = (sequelize) => {
       allowNull: false,
       references: {
         model: 'categories',
+        key: 'id'
+      }
+    },
+    publisherId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'publishers',
         key: 'id'
       }
     },

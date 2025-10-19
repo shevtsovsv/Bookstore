@@ -9,13 +9,13 @@ module.exports = (sequelize) => {
     static associate(models) {
       // Связь с пользователем: товар в корзине принадлежит одному пользователю
       CartItem.belongsTo(models.User, {
-        foreignKey: 'user_id',
+        foreignKey: 'userId',
         as: 'user'
       });
 
       // Связь с книгой: товар в корзине ссылается на одну книгу
       CartItem.belongsTo(models.Book, {
-        foreignKey: 'book_id',
+        foreignKey: 'bookId',
         as: 'book'
       });
     }
@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
       autoIncrement: true,
       allowNull: false
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -36,7 +36,7 @@ module.exports = (sequelize) => {
         key: 'id'
       }
     },
-    book_id: {
+    bookId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -56,9 +56,7 @@ module.exports = (sequelize) => {
     sequelize,
     modelName: 'CartItem',
     tableName: 'cart',
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    timestamps: true
   });
 
   return CartItem;

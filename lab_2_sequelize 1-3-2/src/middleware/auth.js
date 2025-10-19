@@ -58,42 +58,23 @@ const authenticateToken = async (req, res, next) => {
 };
 
 /**
- * Middleware для проверки роли пользователя
+ * Временный middleware для админ-функций (пока что разрешает всем аутентифицированным пользователям)
+ * В будущем можно добавить поле role в User модель
  */
-const requireRole = (allowedRoles) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Пользователь не аутентифицирован'
-      });
-    }
-
-    if (!allowedRoles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: 'Недостаточно прав доступа'
-      });
-    }
-
-    next();
-  };
+const requireAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Пользователь не аутентифицирован'
+    });
+  }
+  
+  // Временно разрешаем всем аутентифицированным пользователям
+  next();
 };
-
-/**
- * Middleware только для администраторов
- */
-const requireAdmin = requireRole(['admin']);
-
-/**
- * Middleware для администраторов и менеджеров
- */
-const requireAdminOrManager = requireRole(['admin', 'manager']);
 
 module.exports = {
   authenticateToken,
-  requireRole,
   requireAdmin,
-  requireAdminOrManager,
   JWT_SECRET
 };

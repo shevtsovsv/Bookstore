@@ -1,65 +1,89 @@
-const express = require('express');
-const { body } = require('express-validator');
-const categoriesController = require('../controllers/categoriesController');
-const { authenticateToken, requireAdmin } = require('../middleware/auth');
+const express = require("express");
+const categoriesController = require("../controllers/categoriesController");
+const { authenticateToken, requireAdmin } = require("../middleware/auth");
+const {
+  validateCategoryId,
+  validateCreateCategory,
+  validateUpdateCategory,
+  validateCategoriesPagination,
+} = require("../middleware/categoriesValidation");
 
 const router = express.Router();
 
 /**
- * Валидация для создания категории
+ * @route   GET /api/categories
+ * @desc    Получение списка категорий с пагинацией и поиском
+ * @access  Public
+ * @query   page, limit, search
  */
-const createCategoryValidation = [
-  body('name')
-    .trim()
-    .isLength({ min: 1, max: 255 })
-    .withMessage('Название категории должно содержать от 1 до 255 символов'),
-  
-  body('slug')
-    .trim()
-    .isLength({ min: 1, max: 255 })
-    .matches(/^[a-z0-9-]+$/)
-    .withMessage('Slug должен содержать только строчные буквы, цифры и дефисы'),
-  
-  body('description')
-    .optional()
-    .trim()
-    .isLength({ max: 1000 })
-    .withMessage('Описание не должно превышать 1000 символов'),
-  
-  body('parent_id')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('ID родительской категории должно быть положительным числом'),
-  
-  body('sort_order')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Порядок сортировки должен быть неотрицательным числом')
-];
+router.get(
+  "/",
+  validateCategoriesPagination,
+  categoriesController.getCategories
+);
 
 /**
- * GET /api/categories - Получение всех категорий
- * Query параметры:
- * - includeInactive: boolean - включить неактивные категории
+ * @route   GET /api/categories/:id
+ * @desc    Получение категории по ID с книгами
+ * @access  Public
+ * @params  id - ID категории
+ * @query   page, limit (для книг)
  */
-router.get('/', categoriesController.getCategories);
+router.get("/:id", validateCategoryId, categoriesController.getCategoryById);
 
 /**
- * GET /api/categories/:id - Получение категории по ID с книгами
- * Query параметры:
- * - page: number - номер страницы для книг
- * - limit: number - количество книг на страницу
+ * @route   GET /api/categories/:id/books
+ * @desc    Получение книг категории с пагинацией
+ * @access  Public
+ * @params  id - ID категории
+ * @query   page, limit
  */
-router.get('/:id', categoriesController.getCategoryById);
+router.get(
+  "/:id/books",
+  [...validateCategoryId, ...validateCategoriesPagination],
+  categoriesController.getCategoryBooks
+);
 
 /**
- * POST /api/categories - Создание категории (только админы)
+ * @route   POST /api/categories
+ * @desc    Создание новой категории
+ * @access  Private (Admin only)
+ * @body    { name, slug, description? }
  */
-router.post('/', 
-  authenticateToken, 
-  requireAdmin, 
-  createCategoryValidation, 
+router.post(
+  "/",
+  [authenticateToken, requireAdmin, ...validateCreateCategory],
   categoriesController.createCategory
+);
+
+/**
+ * @route   PUT /api/categories/:id
+ * @desc    Обновление категории
+ * @access  Private (Admin only)
+ * @params  id - ID категории
+ * @body    { name?, slug?, description? }
+ */
+router.put(
+  "/:id",
+  [
+    authenticateToken,
+    requireAdmin,
+    ...validateCategoryId,
+    ...validateUpdateCategory,
+  ],
+  categoriesController.updateCategory
+);
+
+/**
+ * @route   DELETE /api/categories/:id
+ * @desc    Удаление категории
+ * @access  Private (Admin only)
+ * @params  id - ID категории
+ */
+router.delete(
+  "/:id",
+  [authenticateToken, requireAdmin, ...validateCategoryId],
+  categoriesController.deleteCategory
 );
 
 module.exports = router;

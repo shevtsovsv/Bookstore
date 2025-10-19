@@ -1,6 +1,6 @@
-const { Publisher, Book } = require('../../models');
-const { validationResult } = require('express-validator');
-const { Op } = require('sequelize');
+const { Publisher, Book } = require("../../models");
+const { validationResult } = require("express-validator");
+const { Op } = require("sequelize");
 
 /**
  * Получение списка издателей с пагинацией
@@ -9,7 +9,7 @@ const getPublishers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 20;
-    const search = req.query.search || '';
+    const search = req.query.search || "";
     const offset = (page - 1) * limit;
 
     let whereClause = {};
@@ -17,8 +17,8 @@ const getPublishers = async (req, res) => {
       whereClause = {
         [Op.or]: [
           { name: { [Op.iLike]: `%${search}%` } },
-          { description: { [Op.iLike]: `%${search}%` } }
-        ]
+          { description: { [Op.iLike]: `%${search}%` } },
+        ],
       };
     }
 
@@ -26,15 +26,15 @@ const getPublishers = async (req, res) => {
       where: whereClause,
       limit,
       offset,
-      order: [['name', 'ASC']],
+      order: [["name", "ASC"]],
       include: [
         {
           model: Book,
-          as: 'books',
-          attributes: ['id'],
-          required: false
-        }
-      ]
+          as: "books",
+          attributes: ["id"],
+          required: false,
+        },
+      ],
     });
 
     const totalPages = Math.ceil(count / limit);
@@ -42,17 +42,17 @@ const getPublishers = async (req, res) => {
     res.json({
       success: true,
       data: {
-        publishers: publishers.map(publisher => ({
+        publishers: publishers.map((publisher) => ({
           id: publisher.id,
           name: publisher.name,
           description: publisher.description,
-          address: publisher.address,
-          phone: publisher.phone,
-          email: publisher.email,
           website: publisher.website,
+          contactEmail: publisher.contact_email,
+          foundedYear: publisher.founded_year,
+          country: publisher.country,
           booksCount: publisher.books ? publisher.books.length : 0,
           createdAt: publisher.created_at,
-          updatedAt: publisher.updated_at
+          updatedAt: publisher.updated_at,
         })),
         pagination: {
           currentPage: page,
@@ -60,16 +60,15 @@ const getPublishers = async (req, res) => {
           totalItems: count,
           itemsPerPage: limit,
           hasNext: page < totalPages,
-          hasPrev: page > 1
-        }
-      }
+          hasPrev: page > 1,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get publishers error:', error);
+    console.error("Get publishers error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения издателей'
+      message: "Ошибка получения издателей",
     });
   }
 };
@@ -85,24 +84,24 @@ const getPublisherById = async (req, res) => {
       include: [
         {
           model: Book,
-          as: 'books',
-          attributes: ['id', 'title', 'price', 'publication_year', 'isbn', 'stock'],
+          as: "books",
+          attributes: ["id", "title", "price", "stock"],
           limit: 10,
-          order: [['created_at', 'DESC']]
-        }
-      ]
+          order: [["createdAt", "DESC"]],
+        },
+      ],
     });
 
     if (!publisher) {
       return res.status(404).json({
         success: false,
-        message: 'Издатель не найден'
+        message: "Издатель не найден",
       });
     }
 
     // Получаем общее количество книг этого издателя
     const booksCount = await Book.count({
-      where: { publisher_id: id }
+      where: { publisherId: id },
     });
 
     res.json({
@@ -112,30 +111,27 @@ const getPublisherById = async (req, res) => {
           id: publisher.id,
           name: publisher.name,
           description: publisher.description,
-          address: publisher.address,
-          phone: publisher.phone,
-          email: publisher.email,
           website: publisher.website,
+          contactEmail: publisher.contact_email,
+          foundedYear: publisher.founded_year,
+          country: publisher.country,
           createdAt: publisher.created_at,
           updatedAt: publisher.updated_at,
           booksCount,
-          recentBooks: publisher.books.map(book => ({
+          recentBooks: publisher.books.map((book) => ({
             id: book.id,
             title: book.title,
             price: parseFloat(book.price),
-            publicationYear: book.publication_year,
-            isbn: book.isbn,
-            stock: book.stock
-          }))
-        }
-      }
+            stock: book.stock,
+          })),
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get publisher by ID error:', error);
+    console.error("Get publisher by ID error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения издателя'
+      message: "Ошибка получения издателя",
     });
   }
 };
@@ -155,22 +151,22 @@ const getPublisherBooks = async (req, res) => {
     if (!publisher) {
       return res.status(404).json({
         success: false,
-        message: 'Издатель не найден'
+        message: "Издатель не найден",
       });
     }
 
     const { count, rows: books } = await Book.findAndCountAll({
-      where: { publisher_id: id },
+      where: { publisherId: id },
       limit,
       offset,
-      order: [['created_at', 'DESC']],
+      order: [["createdAt", "DESC"]],
       include: [
         {
-          model: require('../../models').Category,
-          as: 'category',
-          attributes: ['id', 'name']
-        }
-      ]
+          model: require("../../models").Category,
+          as: "category",
+          attributes: ["id", "name"],
+        },
+      ],
     });
 
     const totalPages = Math.ceil(count / limit);
@@ -180,23 +176,25 @@ const getPublisherBooks = async (req, res) => {
       data: {
         publisher: {
           id: publisher.id,
-          name: publisher.name
+          name: publisher.name,
         },
-        books: books.map(book => ({
+        books: books.map((book) => ({
           id: book.id,
           title: book.title,
-          description: book.description,
+          shortDescription: book.shortDescription,
+          fullDescription: book.fullDescription,
           price: parseFloat(book.price),
-          publicationYear: book.publication_year,
-          isbn: book.isbn,
-          pages: book.pages,
+          priceCategory: book.priceCategory,
           stock: book.stock,
           image: book.image,
-          category: book.category ? {
-            id: book.category.id,
-            name: book.category.name
-          } : null,
-          createdAt: book.created_at
+          popularity: book.popularity,
+          category: book.category
+            ? {
+                id: book.category.id,
+                name: book.category.name,
+              }
+            : null,
+          createdAt: book.createdAt,
         })),
         pagination: {
           currentPage: page,
@@ -204,16 +202,15 @@ const getPublisherBooks = async (req, res) => {
           totalItems: count,
           itemsPerPage: limit,
           hasNext: page < totalPages,
-          hasPrev: page > 1
-        }
-      }
+          hasPrev: page > 1,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get publisher books error:', error);
+    console.error("Get publisher books error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения книг издателя'
+      message: "Ошибка получения книг издателя",
     });
   }
 };
@@ -227,42 +224,36 @@ const createPublisher = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
-    const {
-      name,
-      description,
-      address,
-      phone,
-      email,
-      website
-    } = req.body;
+    const { name, description, website, contact_email, founded_year, country } =
+      req.body;
 
     // Проверяем уникальность имени
     const existingPublisher = await Publisher.findOne({
-      where: { name }
+      where: { name },
     });
 
     if (existingPublisher) {
       return res.status(400).json({
         success: false,
-        message: 'Издатель с таким названием уже существует'
+        message: "Издатель с таким названием уже существует",
       });
     }
 
     // Проверяем уникальность email (если указан)
-    if (email) {
+    if (contact_email) {
       const emailExists = await Publisher.findOne({
-        where: { email }
+        where: { contact_email },
       });
 
       if (emailExists) {
         return res.status(400).json({
           success: false,
-          message: 'Издатель с таким email уже существует'
+          message: "Издатель с таким email уже существует",
         });
       }
     }
@@ -270,34 +261,33 @@ const createPublisher = async (req, res) => {
     const publisher = await Publisher.create({
       name: name.trim(),
       description: description?.trim(),
-      address: address?.trim(),
-      phone: phone?.trim(),
-      email: email?.trim(),
-      website: website?.trim()
+      website: website?.trim(),
+      contact_email: contact_email?.trim(),
+      founded_year,
+      country: country?.trim(),
     });
 
     res.status(201).json({
       success: true,
-      message: 'Издатель успешно создан',
+      message: "Издатель успешно создан",
       data: {
         publisher: {
           id: publisher.id,
           name: publisher.name,
           description: publisher.description,
-          address: publisher.address,
-          phone: publisher.phone,
-          email: publisher.email,
           website: publisher.website,
-          createdAt: publisher.created_at
-        }
-      }
+          contactEmail: publisher.contact_email,
+          foundedYear: publisher.founded_year,
+          country: publisher.country,
+          createdAt: publisher.created_at,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Create publisher error:', error);
+    console.error("Create publisher error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка создания издателя'
+      message: "Ошибка создания издателя",
     });
   }
 };
@@ -311,26 +301,20 @@ const updatePublisher = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
     const { id } = req.params;
-    const {
-      name,
-      description,
-      address,
-      phone,
-      email,
-      website
-    } = req.body;
+    const { name, description, website, contact_email, founded_year, country } =
+      req.body;
 
     const publisher = await Publisher.findByPk(id);
     if (!publisher) {
       return res.status(404).json({
         success: false,
-        message: 'Издатель не найден'
+        message: "Издатель не найден",
       });
     }
 
@@ -339,31 +323,31 @@ const updatePublisher = async (req, res) => {
       const existingPublisher = await Publisher.findOne({
         where: {
           name,
-          id: { [Op.ne]: id }
-        }
+          id: { [Op.ne]: id },
+        },
       });
 
       if (existingPublisher) {
         return res.status(400).json({
           success: false,
-          message: 'Издатель с таким названием уже существует'
+          message: "Издатель с таким названием уже существует",
         });
       }
     }
 
     // Проверяем уникальность email (исключая текущего издателя)
-    if (email && email !== publisher.email) {
+    if (contact_email && contact_email !== publisher.contact_email) {
       const emailExists = await Publisher.findOne({
         where: {
-          email,
-          id: { [Op.ne]: id }
-        }
+          contact_email,
+          id: { [Op.ne]: id },
+        },
       });
 
       if (emailExists) {
         return res.status(400).json({
           success: false,
-          message: 'Издатель с таким email уже существует'
+          message: "Издатель с таким email уже существует",
         });
       }
     }
@@ -372,34 +356,33 @@ const updatePublisher = async (req, res) => {
     await publisher.update({
       name: name?.trim() || publisher.name,
       description: description?.trim(),
-      address: address?.trim(),
-      phone: phone?.trim(),
-      email: email?.trim(),
-      website: website?.trim()
+      website: website?.trim(),
+      contact_email: contact_email?.trim(),
+      founded_year: founded_year || publisher.founded_year,
+      country: country?.trim(),
     });
 
     res.json({
       success: true,
-      message: 'Издатель успешно обновлён',
+      message: "Издатель успешно обновлён",
       data: {
         publisher: {
           id: publisher.id,
           name: publisher.name,
           description: publisher.description,
-          address: publisher.address,
-          phone: publisher.phone,
-          email: publisher.email,
           website: publisher.website,
-          updatedAt: publisher.updated_at
-        }
-      }
+          contactEmail: publisher.contact_email,
+          foundedYear: publisher.founded_year,
+          country: publisher.country,
+          updatedAt: publisher.updated_at,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Update publisher error:', error);
+    console.error("Update publisher error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка обновления издателя'
+      message: "Ошибка обновления издателя",
     });
   }
 };
@@ -415,16 +398,16 @@ const deletePublisher = async (req, res) => {
       include: [
         {
           model: Book,
-          as: 'books',
-          attributes: ['id']
-        }
-      ]
+          as: "books",
+          attributes: ["id"],
+        },
+      ],
     });
 
     if (!publisher) {
       return res.status(404).json({
         success: false,
-        message: 'Издатель не найден'
+        message: "Издатель не найден",
       });
     }
 
@@ -432,7 +415,7 @@ const deletePublisher = async (req, res) => {
     if (publisher.books && publisher.books.length > 0) {
       return res.status(400).json({
         success: false,
-        message: `Невозможно удалить издателя. У него есть ${publisher.books.length} связанных книг`
+        message: `Невозможно удалить издателя. У него есть ${publisher.books.length} связанных книг`,
       });
     }
 
@@ -440,14 +423,13 @@ const deletePublisher = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Издатель успешно удалён'
+      message: "Издатель успешно удалён",
     });
-
   } catch (error) {
-    console.error('Delete publisher error:', error);
+    console.error("Delete publisher error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка удаления издателя'
+      message: "Ошибка удаления издателя",
     });
   }
 };
@@ -458,5 +440,5 @@ module.exports = {
   getPublisherBooks,
   createPublisher,
   updatePublisher,
-  deletePublisher
+  deletePublisher,
 };

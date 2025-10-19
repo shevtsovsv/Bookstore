@@ -1,6 +1,6 @@
-const { User } = require('../../models');
-const { hashPassword, comparePassword, generateToken, validatePasswordStrength } = require('../utils/auth');
-const { validationResult } = require('express-validator');
+const { User } = require("../../models");
+const { generateToken, validatePasswordStrength } = require("../utils/auth");
+const { validationResult } = require("express-validator");
 
 /**
  * Регистрация нового пользователя
@@ -12,20 +12,20 @@ const register = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
-    const { firstName, lastName, email, password, phone } = req.body;
+    const { firstName, lastName, email, password, username } = req.body;
 
     // Проверка силы пароля
     const passwordValidation = validatePasswordStrength(password);
     if (!passwordValidation.isValid) {
       return res.status(400).json({
         success: false,
-        message: 'Пароль не соответствует требованиям',
-        errors: passwordValidation.errors
+        message: "Пароль не соответствует требованиям",
+        errors: passwordValidation.errors,
       });
     }
 
@@ -34,51 +34,56 @@ const register = async (req, res) => {
     if (existingUser) {
       return res.status(409).json({
         success: false,
-        message: 'Пользователь с таким email уже существует'
+        message: "Пользователь с таким email уже существует",
       });
     }
 
-    // Хеширование пароля
-    const hashedPassword = await hashPassword(password);
+    // Проверка существования username
+    if (username) {
+      const existingUsername = await User.findOne({ where: { username } });
+      if (existingUsername) {
+        return res.status(409).json({
+          success: false,
+          message: "Пользователь с таким username уже существует",
+        });
+      }
+    }
 
-    // Создание пользователя
+    // Создание пользователя (пароль автоматически хешируется в модели)
     const user = await User.create({
-      first_name: firstName,
-      last_name: lastName,
+      firstName,
+      lastName,
       email,
-      password_hash: hashedPassword,
-      phone,
-      role: 'customer' // По умолчанию роль покупателя
+      password,
+      username: username || email.split("@")[0], // Если username не указан, используем часть email
     });
 
     // Генерация токена
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role
+      username: user.username,
     });
 
     res.status(201).json({
       success: true,
-      message: 'Пользователь успешно зарегистрирован',
+      message: "Пользователь успешно зарегистрирован",
       data: {
         user: {
           id: user.id,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
-          phone: user.phone,
-          role: user.role
+          username: user.username,
         },
-        token
-      }
+        token,
+      },
     });
-
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при регистрации'
+      message: "Ошибка сервера при регистрации",
     });
   }
 };
@@ -93,8 +98,8 @@ const login = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
@@ -105,16 +110,16 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Неверный email или пароль'
+        message: "Неверный email или пароль",
       });
     }
 
-    // Проверка пароля
-    const isValidPassword = await comparePassword(password, user.password_hash);
+    // Проверка пароля (используем метод модели)
+    const isValidPassword = await user.checkPassword(password);
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
-        message: 'Неверный email или пароль'
+        message: "Неверный email или пароль",
       });
     }
 
@@ -122,30 +127,28 @@ const login = async (req, res) => {
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role
+      username: user.username,
     });
 
     res.json({
       success: true,
-      message: 'Авторизация успешна',
+      message: "Авторизация успешна",
       data: {
         user: {
           id: user.id,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
-          phone: user.phone,
-          role: user.role
+          username: user.username,
         },
-        token
-      }
+        token,
+      },
     });
-
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при авторизации'
+      message: "Ошибка сервера при авторизации",
     });
   }
 };
@@ -162,21 +165,19 @@ const getProfile = async (req, res) => {
       data: {
         user: {
           id: user.id,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
-          phone: user.phone,
-          role: user.role,
-          createdAt: user.created_at
-        }
-      }
+          username: user.username,
+          createdAt: user.createdAt,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get profile error:', error);
+    console.error("Get profile error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при получении профиля'
+      message: "Ошибка сервера при получении профиля",
     });
   }
 };
@@ -190,49 +191,46 @@ const updateProfile = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
-    const { firstName, lastName, phone } = req.body;
+    const { firstName, lastName } = req.body;
     const userId = req.user.id;
 
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'Пользователь не найден'
+        message: "Пользователь не найден",
       });
     }
 
     // Обновление данных
     await user.update({
-      first_name: firstName || user.first_name,
-      last_name: lastName || user.last_name,
-      phone: phone || user.phone
+      firstName: firstName || user.firstName,
+      lastName: lastName || user.lastName,
     });
 
     res.json({
       success: true,
-      message: 'Профиль обновлён',
+      message: "Профиль обновлён",
       data: {
         user: {
           id: user.id,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
-          phone: user.phone,
-          role: user.role
-        }
-      }
+          username: user.username,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Update profile error:', error);
+    console.error("Update profile error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при обновлении профиля'
+      message: "Ошибка сервера при обновлении профиля",
     });
   }
 };
@@ -241,5 +239,5 @@ module.exports = {
   register,
   login,
   getProfile,
-  updateProfile
+  updateProfile,
 };

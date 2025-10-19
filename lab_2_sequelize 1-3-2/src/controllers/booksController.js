@@ -1,6 +1,12 @@
-const { Book, Category, Publisher, Author, BookAuthor } = require('../../models');
-const { validationResult } = require('express-validator');
-const { Op } = require('sequelize');
+const {
+  Book,
+  Category,
+  Publisher,
+  Author,
+  BookAuthor,
+} = require("../../models");
+const { validationResult } = require("express-validator");
+const { Op } = require("sequelize");
 
 /**
  * Получение списка книг с пагинацией и фильтрацией
@@ -14,11 +20,11 @@ const getBooks = async (req, res) => {
       category,
       publisher,
       search,
-      sortBy = 'popularity',
-      sortOrder = 'DESC',
+      sortBy = "popularity",
+      sortOrder = "DESC",
       minPrice,
       maxPrice,
-      inStock = true
+      inStock = true,
     } = req.query;
 
     // Валидация параметров
@@ -30,14 +36,14 @@ const getBooks = async (req, res) => {
     const whereConditions = {};
 
     // Только книги в наличии (как требует преподаватель)
-    if (inStock === 'true' || inStock === true) {
+    if (inStock === "true" || inStock === true) {
       whereConditions.stock = { [Op.gt]: 0 };
     }
 
     // Поиск по названию
     if (search) {
       whereConditions.title = {
-        [Op.iLike]: `%${search}%` // PostgreSQL поиск без учёта регистра
+        [Op.iLike]: `%${search}%`, // PostgreSQL поиск без учёта регистра
       };
     }
 
@@ -50,18 +56,20 @@ const getBooks = async (req, res) => {
 
     // Фильтр по категории
     if (category) {
-      whereConditions.category_id = category;
+      whereConditions.categoryId = category;
     }
 
     // Фильтр по издательству
     if (publisher) {
-      whereConditions.publisher_id = publisher;
+      whereConditions.publisherId = publisher;
     }
 
     // Сортировка
-    const allowedSortFields = ['popularity', 'price', 'title', 'publication_year', 'created_at'];
-    const sortField = allowedSortFields.includes(sortBy) ? sortBy : 'popularity';
-    const sortDirection = sortOrder.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
+    const allowedSortFields = ["popularity", "price", "title", "createdAt"];
+    const sortField = allowedSortFields.includes(sortBy)
+      ? sortBy
+      : "popularity";
+    const sortDirection = sortOrder.toUpperCase() === "ASC" ? "ASC" : "DESC";
 
     // Запрос к базе данных
     const { count, rows: books } = await Book.findAndCountAll({
@@ -69,25 +77,25 @@ const getBooks = async (req, res) => {
       include: [
         {
           model: Category,
-          as: 'category',
-          attributes: ['id', 'name', 'slug']
+          as: "category",
+          attributes: ["id", "name", "slug"],
         },
         {
           model: Publisher,
-          as: 'publisher',
-          attributes: ['id', 'name', 'country']
+          as: "publisher",
+          attributes: ["id", "name", "country"],
         },
         {
           model: Author,
-          as: 'authors',
-          attributes: ['id', 'first_name', 'last_name'],
-          through: { attributes: ['role'] }
-        }
+          as: "authors",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
       ],
       order: [[sortField, sortDirection]],
       limit: limitNum,
       offset: offset,
-      distinct: true // Важно для правильного подсчёта при JOIN
+      distinct: true, // Важно для правильного подсчёта при JOIN
     });
 
     // Метаданные для пагинации
@@ -98,25 +106,23 @@ const getBooks = async (req, res) => {
     res.json({
       success: true,
       data: {
-        books: books.map(book => ({
+        books: books.map((book) => ({
           id: book.id,
           title: book.title,
-          isbn: book.isbn,
           price: parseFloat(book.price),
+          priceCategory: book.priceCategory,
           stock: book.stock,
-          description: book.description,
-          short_description: book.short_description,
+          shortDescription: book.shortDescription,
+          fullDescription: book.fullDescription,
           image: book.image,
-          pages: book.pages,
-          publication_year: book.publication_year,
           popularity: book.popularity,
           category: book.category,
           publisher: book.publisher,
-          authors: book.authors?.map(author => ({
-            id: author.id,
-            name: `${author.first_name} ${author.last_name}`,
-            role: author.BookAuthor?.role
-          })) || []
+          authors:
+            book.authors?.map((author) => ({
+              id: author.id,
+              name: author.name,
+            })) || [],
         })),
         pagination: {
           currentPage: pageNum,
@@ -124,16 +130,15 @@ const getBooks = async (req, res) => {
           totalItems: count,
           itemsPerPage: limitNum,
           hasNextPage,
-          hasPrevPage
-        }
-      }
+          hasPrevPage,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get books error:', error);
+    console.error("Get books error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при получении списка книг'
+      message: "Ошибка сервера при получении списка книг",
     });
   }
 };
@@ -149,57 +154,57 @@ const getPopularBooks = async (req, res) => {
 
     const books = await Book.findAll({
       where: {
-        stock: { [Op.gt]: 0 } // Только книги в наличии
+        stock: { [Op.gt]: 0 }, // Только книги в наличии
       },
       include: [
         {
           model: Category,
-          as: 'category',
-          attributes: ['id', 'name', 'slug']
+          as: "category",
+          attributes: ["id", "name", "slug"],
         },
         {
           model: Publisher,
-          as: 'publisher',
-          attributes: ['id', 'name']
+          as: "publisher",
+          attributes: ["id", "name"],
         },
         {
           model: Author,
-          as: 'authors',
-          attributes: ['id', 'first_name', 'last_name'],
-          through: { attributes: ['role'] }
-        }
+          as: "authors",
+          attributes: ["id", "name"],
+          through: { attributes: [] },
+        },
       ],
-      order: [['popularity', 'DESC']],
-      limit: limitNum
+      order: [["popularity", "DESC"]],
+      limit: limitNum,
     });
 
     res.json({
       success: true,
       data: {
-        books: books.map(book => ({
+        books: books.map((book) => ({
           id: book.id,
           title: book.title,
           price: parseFloat(book.price),
+          priceCategory: book.priceCategory,
           stock: book.stock,
-          short_description: book.short_description,
+          shortDescription: book.shortDescription,
           image: book.image,
           popularity: book.popularity,
           category: book.category,
           publisher: book.publisher,
-          authors: book.authors?.map(author => ({
-            id: author.id,
-            name: `${author.first_name} ${author.last_name}`,
-            role: author.BookAuthor?.role
-          })) || []
-        }))
-      }
+          authors:
+            book.authors?.map((author) => ({
+              id: author.id,
+              name: author.name,
+            })) || [],
+        })),
+      },
     });
-
   } catch (error) {
-    console.error('Get popular books error:', error);
+    console.error("Get popular books error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при получении популярных книг'
+      message: "Ошибка сервера при получении популярных книг",
     });
   }
 };
@@ -215,27 +220,27 @@ const getBookById = async (req, res) => {
       include: [
         {
           model: Category,
-          as: 'category',
-          attributes: ['id', 'name', 'slug', 'description']
+          as: "category",
+          attributes: ["id", "name", "slug", "description"],
         },
         {
           model: Publisher,
-          as: 'publisher',
-          attributes: ['id', 'name', 'country', 'website']
+          as: "publisher",
+          attributes: ["id", "name", "country", "website"],
         },
         {
           model: Author,
-          as: 'authors',
-          attributes: ['id', 'first_name', 'last_name', 'biography'],
-          through: { attributes: ['role'] }
-        }
-      ]
+          as: "authors",
+          attributes: ["id", "name", "bio"],
+          through: { attributes: [] },
+        },
+      ],
     });
 
     if (!book) {
       return res.status(404).json({
         success: false,
-        message: 'Книга не найдена'
+        message: "Книга не найдена",
       });
     }
 
@@ -245,34 +250,31 @@ const getBookById = async (req, res) => {
         book: {
           id: book.id,
           title: book.title,
-          isbn: book.isbn,
           price: parseFloat(book.price),
+          priceCategory: book.priceCategory,
           stock: book.stock,
-          description: book.description,
-          short_description: book.short_description,
+          shortDescription: book.shortDescription,
+          fullDescription: book.fullDescription,
           image: book.image,
-          pages: book.pages,
-          publication_year: book.publication_year,
           popularity: book.popularity,
           category: book.category,
           publisher: book.publisher,
-          authors: book.authors?.map(author => ({
-            id: author.id,
-            name: `${author.first_name} ${author.last_name}`,
-            biography: author.biography,
-            role: author.BookAuthor?.role
-          })) || [],
+          authors:
+            book.authors?.map((author) => ({
+              id: author.id,
+              name: author.name,
+              bio: author.bio,
+            })) || [],
           isAvailable: book.stock > 0,
-          isLowStock: book.stock > 0 && book.stock <= 5
-        }
-      }
+          isLowStock: book.stock > 0 && book.stock <= 5,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get book by ID error:', error);
+    console.error("Get book by ID error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка сервера при получении информации о книге'
+      message: "Ошибка сервера при получении информации о книге",
     });
   }
 };
@@ -280,5 +282,5 @@ const getBookById = async (req, res) => {
 module.exports = {
   getBooks,
   getPopularBooks,
-  getBookById
+  getBookById,
 };

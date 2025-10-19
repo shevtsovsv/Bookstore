@@ -1,6 +1,6 @@
-const { CartItem, Book, User } = require('../../models');
-const { validationResult } = require('express-validator');
-const { sequelize } = require('../../models');
+const { CartItem, Book, User } = require("../../models");
+const { validationResult } = require("express-validator");
+const { sequelize } = require("../../models");
 
 /**
  * Получение корзины текущего пользователя
@@ -10,27 +10,27 @@ const getCart = async (req, res) => {
     const userId = req.user.id;
 
     const cartItems = await CartItem.findAll({
-      where: { user_id: userId },
+      where: { userId: userId },
       include: [
         {
           model: Book,
-          as: 'book',
-          attributes: ['id', 'title', 'price', 'stock', 'image'],
+          as: "book",
+          attributes: ["id", "title", "price", "stock", "image"],
           include: [
             {
-              model: require('../../models').Publisher,
-              as: 'publisher',
-              attributes: ['name']
-            }
-          ]
-        }
+              model: require("../../models").Publisher,
+              as: "publisher",
+              attributes: ["name"],
+            },
+          ],
+        },
       ],
-      order: [['created_at', 'DESC']]
+      order: [["createdAt", "DESC"]],
     });
 
     // Подсчёт общей стоимости
     const totalAmount = cartItems.reduce((sum, item) => {
-      return sum + (parseFloat(item.book.price) * item.quantity);
+      return sum + parseFloat(item.book.price) * item.quantity;
     }, 0);
 
     const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -38,10 +38,10 @@ const getCart = async (req, res) => {
     res.json({
       success: true,
       data: {
-        items: cartItems.map(item => ({
+        items: cartItems.map((item) => ({
           id: item.id,
           quantity: item.quantity,
-          addedAt: item.created_at,
+          addedAt: item.createdAt,
           book: {
             id: item.book.id,
             title: item.book.title,
@@ -49,22 +49,21 @@ const getCart = async (req, res) => {
             stock: item.book.stock,
             image: item.book.image,
             publisher: item.book.publisher?.name,
-            totalPrice: parseFloat(item.book.price) * item.quantity
-          }
+            totalPrice: parseFloat(item.book.price) * item.quantity,
+          },
         })),
         summary: {
           totalItems,
           totalAmount: parseFloat(totalAmount.toFixed(2)),
-          itemCount: cartItems.length
-        }
-      }
+          itemCount: cartItems.length,
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Get cart error:', error);
+    console.error("Get cart error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка получения корзины'
+      message: "Ошибка получения корзины",
     });
   }
 };
@@ -78,8 +77,8 @@ const addToCart = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
@@ -91,14 +90,14 @@ const addToCart = async (req, res) => {
     if (!book) {
       return res.status(404).json({
         success: false,
-        message: 'Книга не найдена'
+        message: "Книга не найдена",
       });
     }
 
     if (book.stock < quantity) {
       return res.status(400).json({
         success: false,
-        message: `Недостаточно товара на складе. Доступно: ${book.stock}`
+        message: `Недостаточно товара на складе. Доступно: ${book.stock}`,
       });
     }
 
@@ -107,29 +106,34 @@ const addToCart = async (req, res) => {
       // Проверяем, есть ли уже эта книга в корзине
       let cartItem = await CartItem.findOne({
         where: {
-          user_id: userId,
-          book_id: bookId
+          userId: userId,
+          bookId: bookId,
         },
-        transaction: t
+        transaction: t,
       });
 
       if (cartItem) {
         // Увеличиваем количество
         const newQuantity = cartItem.quantity + quantity;
-        
+
         if (newQuantity > book.stock) {
-          throw new Error(`Недостаточно товара на складе. Доступно: ${book.stock}, в корзине: ${cartItem.quantity}`);
+          throw new Error(
+            `Недостаточно товара на складе. Доступно: ${book.stock}, в корзине: ${cartItem.quantity}`
+          );
         }
 
         cartItem.quantity = newQuantity;
         await cartItem.save({ transaction: t });
       } else {
         // Создаём новую позицию в корзине
-        cartItem = await CartItem.create({
-          user_id: userId,
-          book_id: bookId,
-          quantity
-        }, { transaction: t });
+        cartItem = await CartItem.create(
+          {
+            userId: userId,
+            bookId: bookId,
+            quantity,
+          },
+          { transaction: t }
+        );
       }
 
       // Загружаем данные с книгой для ответа
@@ -137,17 +141,17 @@ const addToCart = async (req, res) => {
         include: [
           {
             model: Book,
-            as: 'book',
-            attributes: ['id', 'title', 'price', 'stock']
-          }
+            as: "book",
+            attributes: ["id", "title", "price", "stock"],
+          },
         ],
-        transaction: t
+        transaction: t,
       });
     });
 
     res.json({
       success: true,
-      message: 'Товар добавлен в корзину',
+      message: "Товар добавлен в корзину",
       data: {
         cartItem: {
           id: result.id,
@@ -156,25 +160,24 @@ const addToCart = async (req, res) => {
             id: result.book.id,
             title: result.book.title,
             price: parseFloat(result.book.price),
-            totalPrice: parseFloat(result.book.price) * result.quantity
-          }
-        }
-      }
+            totalPrice: parseFloat(result.book.price) * result.quantity,
+          },
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Add to cart error:', error);
-    
-    if (error.message.includes('Недостаточно товара')) {
+    console.error("Add to cart error:", error);
+
+    if (error.message.includes("Недостаточно товара")) {
       return res.status(400).json({
         success: false,
-        message: error.message
+        message: error.message,
       });
     }
 
     res.status(500).json({
       success: false,
-      message: 'Ошибка добавления в корзину'
+      message: "Ошибка добавления в корзину",
     });
   }
 };
@@ -188,8 +191,8 @@ const updateCartItem = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Ошибки валидации',
-        errors: errors.array()
+        message: "Ошибки валидации",
+        errors: errors.array(),
       });
     }
 
@@ -200,28 +203,28 @@ const updateCartItem = async (req, res) => {
     const cartItem = await CartItem.findOne({
       where: {
         id,
-        user_id: userId
+        userId: userId,
       },
       include: [
         {
           model: Book,
-          as: 'book',
-          attributes: ['id', 'title', 'price', 'stock']
-        }
-      ]
+          as: "book",
+          attributes: ["id", "title", "price", "stock"],
+        },
+      ],
     });
 
     if (!cartItem) {
       return res.status(404).json({
         success: false,
-        message: 'Позиция в корзине не найдена'
+        message: "Позиция в корзине не найдена",
       });
     }
 
     if (quantity > cartItem.book.stock) {
       return res.status(400).json({
         success: false,
-        message: `Недостаточно товара на складе. Доступно: ${cartItem.book.stock}`
+        message: `Недостаточно товара на складе. Доступно: ${cartItem.book.stock}`,
       });
     }
 
@@ -230,7 +233,7 @@ const updateCartItem = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Количество обновлено',
+      message: "Количество обновлено",
       data: {
         cartItem: {
           id: cartItem.id,
@@ -239,17 +242,16 @@ const updateCartItem = async (req, res) => {
             id: cartItem.book.id,
             title: cartItem.book.title,
             price: parseFloat(cartItem.book.price),
-            totalPrice: parseFloat(cartItem.book.price) * cartItem.quantity
-          }
-        }
-      }
+            totalPrice: parseFloat(cartItem.book.price) * cartItem.quantity,
+          },
+        },
+      },
     });
-
   } catch (error) {
-    console.error('Update cart item error:', error);
+    console.error("Update cart item error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка обновления корзины'
+      message: "Ошибка обновления корзины",
     });
   }
 };
@@ -265,27 +267,26 @@ const removeFromCart = async (req, res) => {
     const deleted = await CartItem.destroy({
       where: {
         id,
-        user_id: userId
-      }
+        userId: userId,
+      },
     });
 
     if (!deleted) {
       return res.status(404).json({
         success: false,
-        message: 'Позиция в корзине не найдена'
+        message: "Позиция в корзине не найдена",
       });
     }
 
     res.json({
       success: true,
-      message: 'Товар удалён из корзины'
+      message: "Товар удалён из корзины",
     });
-
   } catch (error) {
-    console.error('Remove from cart error:', error);
+    console.error("Remove from cart error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка удаления из корзины'
+      message: "Ошибка удаления из корзины",
     });
   }
 };
@@ -298,19 +299,18 @@ const clearCart = async (req, res) => {
     const userId = req.user.id;
 
     await CartItem.destroy({
-      where: { user_id: userId }
+      where: { userId: userId },
     });
 
     res.json({
       success: true,
-      message: 'Корзина очищена'
+      message: "Корзина очищена",
     });
-
   } catch (error) {
-    console.error('Clear cart error:', error);
+    console.error("Clear cart error:", error);
     res.status(500).json({
       success: false,
-      message: 'Ошибка очистки корзины'
+      message: "Ошибка очистки корзины",
     });
   }
 };
@@ -320,5 +320,5 @@ module.exports = {
   addToCart,
   updateCartItem,
   removeFromCart,
-  clearCart
+  clearCart,
 };
