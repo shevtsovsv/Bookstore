@@ -37,6 +37,12 @@ router.get(
 );
 
 /**
+ * GET /api/books/stats - Статистика магазина
+ * Возвращает общую информацию о книгах, жанрах и продажах
+ */
+router.get("/stats", booksController.getStats);
+
+/**
  * GET /api/books/:id - Детальная информация о книге
  */
 router.get("/:id", validateBookId, booksController.getBookById);

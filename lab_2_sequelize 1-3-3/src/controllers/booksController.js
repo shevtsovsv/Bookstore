@@ -279,8 +279,75 @@ const getBookById = async (req, res) => {
   }
 };
 
+/**
+ * Получение статистики магазина
+ * Возвращает общую информацию о книгах, жанрах и продажах
+ */
+const getStats = async (req, res) => {
+  try {
+    console.log("Получение статистики магазина...");
+
+    // Общая статистика по книгам
+    const totalBooks = await Book.count();
+    
+    // Количество категорий (жанров)
+    const totalGenres = await Category.count();
+    
+    // Общее количество проданных книг (сумма всех popularity)
+    const totalSoldResult = await Book.sum('popularity');
+    const totalSold = totalSoldResult || 0;
+
+    // Популярные жанры по количеству проданных книг
+    const genresWithSales = await Category.findAll({
+      attributes: [
+        'id',
+        'name',
+        // Сумма popularity (проданных книг) в каждой категории
+        [Book.sequelize.fn('SUM', Book.sequelize.col('books.popularity')), 'totalSold']
+      ],
+      include: [{
+        model: Book,
+        as: 'books', // Указываем правильный алиас для ассоциации
+        attributes: [],
+        required: true // INNER JOIN - только категории с книгами
+      }],
+      group: ['Category.id', 'Category.name'],
+      order: [[Book.sequelize.fn('SUM', Book.sequelize.col('books.popularity')), 'DESC']],
+      raw: true
+    });
+
+    // Форматируем данные для ответа
+    const stats = {
+      books: {
+        totalBooks,
+        totalGenres,
+        totalSold: Math.round(totalSold)
+      },
+      genres: genresWithSales.map(genre => ({
+        name: genre.name,
+        count: Math.round(parseInt(genre.totalSold) || 0)
+      }))
+    };
+
+    console.log("Статистика собрана:", stats);
+
+    res.json({
+      success: true,
+      message: "Статистика магазина получена успешно",
+      data: stats,
+    });
+  } catch (error) {
+    console.error("Get stats error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Ошибка сервера при получении статистики",
+    });
+  }
+};
+
 module.exports = {
   getBooks,
   getPopularBooks,
   getBookById,
+  getStats,
 };
