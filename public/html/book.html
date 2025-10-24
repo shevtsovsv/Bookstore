@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Каталог книг</title>
+    <link rel="stylesheet" href="../style/style.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        src="../img/logo.png"
+        alt="Логотип магазина"
+        class="logo"
+        width="140"
+        height="70"
+      />
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Главная</a></li>
+          <li><a href="book.html" class="active">Каталог</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="register.html">Регистрация</a></li>
+          <li><a href="login.html">Вход</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Информация о книгах</h1>
+
+      <nav id="book-navigation">
+        <!-- Навигация будет сгенерирована из JSON -->
+      </nav>
+
+      <div class="filters">
+        <h2>Фильтр</h2>
+
+        <div class="filter-group">
+          <strong>Жанр:</strong>
+          <label for="all-genre"
+            ><input
+              type="radio"
+              name="genre"
+              id="all-genre"
+              value="all"
+              checked
+            />
+            Все</label
+          >
+          <label for="romance"
+            ><input type="radio" name="genre" id="romance" value="romance" />
+            Романтика</label
+          >
+          <label for="drama"
+            ><input type="radio" name="genre" id="drama" value="drama" />
+            Драма</label
+          >
+          <label for="fantasy"
+            ><input type="radio" name="genre" id="fantasy" value="fantasy" />
+            Фантастика</label
+          >
+          <label for="bio"
+            ><input type="radio" name="genre" id="bio" value="bio" />
+            Биография</label
+          >
+        </div>
+
+        <div class="filter-group">
+          <strong>Цена:</strong>
+          <label for="all-price"
+            ><input
+              type="radio"
+              name="price"
+              id="all-price"
+              value="all"
+              checked
+            />
+            Все</label
+          >
+          <label for="price-low"
+            ><input type="radio" name="price" id="price-low" value="low" />
+            500–1000 руб.</label
+          >
+          <label for="price-high"
+            ><input type="radio" name="price" id="price-high" value="high" />
+            1000–2000 руб.</label
+          >
+        </div>
+
+        <div class="filter-group">
+          <strong>Автор:</strong>
+          <label for="all-author"
+            ><input
+              type="radio"
+              name="author"
+              id="all-author"
+              value="all"
+              checked
+            />
+            Все</label
+          >
+          <label for="russian"
+            ><input type="radio" name="author" id="russian" value="russian" />
+            Русский</label
+          >
+          <label for="foreign"
+            ><input type="radio" name="author" id="foreign" value="foreign" />
+            Зарубежный</label
+          >
+        </div>
+      </div>
+
+      <!-- КАРТОЧКИ -->
+      <section class="books" id="books-container">
+        <!-- Статические карточки для тестирования -->
+        <div id="book1" class="book-card romance foreign price-low" style="display: flex !important;">
+          <img src="../img/book1.jpg" alt="Унесённые ветром — обложка" class="book-cover" loading="lazy" width="250" height="350">
+          <div class="book-info">
+            <p><strong>Автор:</strong> Маргарет Митчелл</p>
+            <p><strong>Жанр:</strong> Романтика</p>
+            <p><strong>Описание:</strong> «Унесённые ветром» — масштабная история...</p>
+            <p><strong>Цена:</strong> 900 руб.</p>
+            <div>
+              <a href="book-detail.html?id=book1" class="buy-btn" aria-label="Подробнее о книге Унесённые ветром">Подробнее</a>
+              <button class="buy-btn" onclick="alert('Книга добавлена в корзину!')" aria-label="Заказать Унесённые ветром">Заказать</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="book2" class="book-card drama russian price-low" style="display: flex !important;">
+          <img src="../img/book2.jpg" alt="Гроза — обложка" class="book-cover" loading="lazy" width="250" height="350">
+          <div class="book-info">
+            <p><strong>Автор:</strong> Александр Островский</p>
+            <p><strong>Жанр:</strong> Драма</p>
+            <p><strong>Описание:</strong> «Гроза» — драма о столкновении...</p>
+            <p><strong>Цена:</strong> 550 руб.</p>
+            <div>
+              <a href="book-detail.html?id=book2" class="buy-btn" aria-label="Подробнее о книге Гроза">Подробнее</a>
+              <button class="buy-btn" onclick="alert('Книга добавлена в корзину!')" aria-label="Заказать Гроза">Заказать</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="book3" class="book-card bio russian price-high" style="display: flex !important;">
+          <img src="../img/book3.jpg" alt="Море и звезды — обложка" class="book-cover" loading="lazy" width="250" height="350">
+          <div class="book-info">
+            <p><strong>Автор:</strong> Алексей Бирюлин</p>
+            <p><strong>Жанр:</strong> Биография</p>
+            <p><strong>Описание:</strong> «Море и звезды» — исторический роман-биография...</p>
+            <p><strong>Цена:</strong> 1670 руб.</p>
+            <div>
+              <a href="book-detail.html?id=book3" class="buy-btn" aria-label="Подробнее о книге Море и звезды">Подробнее</a>
+              <button class="buy-btn" onclick="alert('Книга добавлена в корзину!')" aria-label="Заказать Море и звезды">Заказать</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Временно отключены для тестирования -->
+    <!-- <script src="../scripts/book-data.js"></script> -->
+    <!-- <script src="../scripts/book-catalog.js"></script> -->
+    <!-- <script src="../scripts/filters.js"></script> -->
+    
+    <script>
+      console.log("🎯 Статические карточки загружены");
+      console.log("📦 Найдено карточек:", document.querySelectorAll('.book-card').length);
+    </script>
+  </body>
+</html>
