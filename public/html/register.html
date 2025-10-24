@@ -29,22 +29,76 @@
     <main class="container">
       <div class="form-wrapper">
         <h1>Регистрация</h1>
-        <form action="/cgi-bin/register.py" method="post" class="form-box">
-          <label for="username">Логин</label>
-          <input type="text" id="username" name="username" required />
+        
+        <!-- Уведомления об ошибках и успехе -->
+        <div id="notification" class="notification" style="display: none;"></div>
+        
+        <form id="registerForm" class="form-box">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">Имя</label>
+              <input type="text" id="firstName" name="firstName" required 
+                     placeholder="Введите ваше имя" />
+              <span class="error-message" id="firstName-error"></span>
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName">Фамилия</label>
+              <input type="text" id="lastName" name="lastName" required 
+                     placeholder="Введите вашу фамилию" />
+              <span class="error-message" id="lastName-error"></span>
+            </div>
+          </div>
 
-          <label for="password">Пароль</label>
-          <input type="password" id="password" name="password" required />
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required 
+                   placeholder="example@email.com" />
+            <span class="error-message" id="email-error"></span>
+          </div>
 
-          <button
-            type="submit"
-            class="form-btn"
-            aria-label="Зарегистрироваться"
-          >
-            Зарегистрироваться
+          <div class="form-group">
+            <label for="username">Логин (необязательно)</label>
+            <input type="text" id="username" name="username" 
+                   placeholder="Будет создан автоматически из email" />
+            <span class="error-message" id="username-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="Минимум 8 символов" />
+            <div class="password-requirements">
+              <small>Пароль должен содержать:</small>
+              <ul>
+                <li>Минимум 8 символов</li>
+                <li>Минимум 1 заглавную букву (A-Z)</li>
+                <li>Строчные английские буквы (a-z)</li>
+                <li>Минимум 2 цифры (0-9)</li>
+                <li>Только английские символы и знаки @$!%*?&</li>
+              </ul>
+            </div>
+            <span class="error-message" id="password-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Подтверждение пароля</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required 
+                   placeholder="Повторите пароль" />
+            <span class="error-message" id="confirmPassword-error"></span>
+          </div>
+
+          <button type="submit" class="form-btn" id="registerBtn">
+            <span class="btn-text">Зарегистрироваться</span>
+            <span class="btn-loader" style="display: none;">Регистрация...</span>
           </button>
+
+          <div class="form-footer">
+            <p>Уже есть аккаунт? <a href="login.html">Войти</a></p>
+          </div>
         </form>
       </div>
     </main>
-  </body>
-</html>
+
+    <script src="../scripts/auth-utils.js"></script>
+    <script src="../scripts/register.js"></script>

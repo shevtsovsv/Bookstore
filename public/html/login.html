@@ -29,18 +29,45 @@
     <main class="container">
       <div class="form-wrapper">
         <h1>Вход</h1>
-        <form action="/cgi-bin/login.py" method="post" class="form-box">
-          <label for="username">Логин</label>
-          <input type="text" id="username" name="username" required />
+        
+        <!-- Уведомления об ошибках и успехе -->
+        <div id="notification" class="notification" style="display: none;"></div>
+        
+        <form id="loginForm" class="form-box">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required 
+                   placeholder="example@email.com" />
+            <span class="error-message" id="email-error"></span>
+          </div>
 
-          <label for="password">Пароль</label>
-          <input type="password" id="password" name="password" required />
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" required 
+                   placeholder="Введите ваш пароль" />
+            <span class="error-message" id="password-error"></span>
+          </div>
 
-          <button type="submit" class="form-btn" aria-label="Войти">
-            Войти
+          <div class="form-group checkbox-group">
+            <label for="remember" class="checkbox-label">
+              <input type="checkbox" id="remember" name="remember" />
+              <span class="checkmark"></span>
+              Запомнить меня
+            </label>
+          </div>
+
+          <button type="submit" class="form-btn" id="loginBtn">
+            <span class="btn-text">Войти</span>
+            <span class="btn-loader" style="display: none;">Вход...</span>
           </button>
+
+          <div class="form-footer">
+            <p>Нет аккаунта? <a href="register.html">Зарегистрироваться</a></p>
+            <p><a href="#" onclick="showForgotPassword()">Забыли пароль?</a></p>
+          </div>
         </form>
       </div>
     </main>
-  </body>
-</html>
+
+    <script src="../scripts/auth-utils.js"></script>
+    <script src="../scripts/login.js"></script>
