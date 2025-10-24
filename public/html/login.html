@@ -29,22 +29,32 @@
     <main class="container">
       <div class="form-wrapper">
         <h1>Вход</h1>
-        
+
         <!-- Уведомления об ошибках и успехе -->
-        <div id="notification" class="notification" style="display: none;"></div>
-        
+        <div id="notification" class="notification" style="display: none"></div>
+
         <form id="loginForm" class="form-box">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required 
-                   placeholder="example@email.com" />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              placeholder="example@email.com"
+            />
             <span class="error-message" id="email-error"></span>
           </div>
 
           <div class="form-group">
             <label for="password">Пароль</label>
-            <input type="password" id="password" name="password" required 
-                   placeholder="Введите ваш пароль" />
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              placeholder="Введите ваш пароль"
+            />
             <span class="error-message" id="password-error"></span>
           </div>
 
@@ -58,7 +68,7 @@
 
           <button type="submit" class="form-btn" id="loginBtn">
             <span class="btn-text">Войти</span>
-            <span class="btn-loader" style="display: none;">Вход...</span>
+            <span class="btn-loader" style="display: none">Вход...</span>
           </button>
 
           <div class="form-footer">
@@ -71,3 +81,5 @@
 
     <script src="../scripts/auth-utils.js"></script>
     <script src="../scripts/login.js"></script>
+  </body>
+</html>
