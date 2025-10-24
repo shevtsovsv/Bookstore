@@ -182,9 +182,12 @@
 
   // Рендерим каталог книг
   function renderBooksCatalog(books) {
+    console.log("🎨 Начинаем рендеринг каталога...");
     const container = document.getElementById("books-container");
+    console.log("📦 Контейнер найден:", !!container);
 
     if (!books || books.length === 0) {
+      console.error("❌ Нет книг для рендеринга");
       container.innerHTML = `
         <div class="error">
           <p>Не удалось загрузить каталог книг. Попробуйте перезагрузить страницу.</p>
@@ -193,8 +196,23 @@
       return;
     }
 
+    console.log("📚 Рендерим", books.length, "книг");
     const cardsHTML = books.map(generateBookCard).join("");
+    console.log("🏗️ HTML сгенерирован, длина:", cardsHTML.length);
+    console.log("📝 Первые 200 символов HTML:", cardsHTML.substring(0, 200));
+    
     container.innerHTML = cardsHTML;
+    console.log("✅ HTML вставлен в контейнер");
+    
+    // Проверяем, что карточки действительно появились
+    const addedCards = container.querySelectorAll('.book-card');
+    console.log("🎯 Найдено карточек в DOM:", addedCards.length);
+    
+    // Принудительно устанавливаем display: flex для всех карточек
+    addedCards.forEach(function(card) {
+      card.style.setProperty('display', 'flex', 'important');
+    });
+    console.log("🎨 Стили применены принудительно");
   }
 
   // Показываем ошибку загрузки
@@ -213,17 +231,21 @@
 
   // Основная функция инициализации
   async function init() {
-    console.log("Инициализация каталога книг...");
+    console.log("🚀 Инициализация каталога книг...");
+    console.log("📍 Контейнер:", document.getElementById("books-container"));
 
     try {
       booksData = await loadBooksData();
+      console.log("📚 Загружено книг:", booksData ? booksData.length : 0);
+      console.log("📋 Данные книг:", booksData);
 
       if (booksData && booksData.length > 0) {
-        console.log(`Загружено ${booksData.length} книг`);
+        console.log(`✅ Загружено ${booksData.length} книг`);
         generateNavigation(booksData);
         renderBooksCatalog(booksData);
+        console.log("🎨 Каталог отрендерен");
       } else {
-        console.error("Данные о книгах не загружены или пусты");
+        console.error("❌ Данные о книгах не загружены или пусты");
         const container = document.getElementById("books-container");
         if (container) {
           container.innerHTML = `
@@ -236,7 +258,7 @@
         }
       }
     } catch (error) {
-      console.error("Ошибка инициализации:", error);
+      console.error("💥 Ошибка инициализации:", error);
       const container = document.getElementById("books-container");
       if (container) {
         container.innerHTML = `

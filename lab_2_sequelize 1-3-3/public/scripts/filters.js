@@ -25,7 +25,7 @@
     var p = getCheckedValue(priceRadios);
     var a = getCheckedValue(authorRadios);
 
-    var cards = document.querySelectorAll('.books .book-card');
+    var cards = document.querySelectorAll('#books-container .book-card');
     cards.forEach(function(card){
       var ok = true;
       if(g !== 'all' && !card.classList.contains(g)) ok = false;
@@ -34,7 +34,7 @@
         if(p === 'high' && !card.classList.contains('price-high')) ok = false;
       }
       if(a !== 'all' && !card.classList.contains(a)) ok = false;
-      card.style.display = ok ? 'flex' : 'none';
+      card.style.setProperty('display', ok ? 'flex' : 'none', 'important');
     });
   }
 
