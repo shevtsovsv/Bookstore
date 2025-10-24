@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Каталог книг</title>
+    <title>Каталог книг - Книжный магазин</title>
     <link rel="stylesheet" href="../style/style.css" />
   </head>
   <body>
@@ -27,100 +27,93 @@
     </header>
 
     <main class="container">
-      <h1>Информация о книгах</h1>
+      <h1>Каталог книг</h1>
 
-      <nav id="book-navigation">
-        <!-- Навигация будет сгенерирована из JSON -->
-      </nav>
-
-      <div class="filters">
-        <h2>Фильтр</h2>
+      <!-- Filters Section -->
+      <div class="filters-section">
+        <h2>Фильтры</h2>
 
         <div class="filter-group">
-          <strong>Жанр:</strong>
-          <label for="all-genre"
-            ><input
-              type="radio"
-              name="genre"
-              id="all-genre"
-              value="all"
-              checked
-            />
-            Все</label
-          >
-          <label for="romance"
-            ><input type="radio" name="genre" id="romance" value="romance" />
-            Романтика</label
-          >
-          <label for="drama"
-            ><input type="radio" name="genre" id="drama" value="drama" />
-            Драма</label
-          >
-          <label for="fantasy"
-            ><input type="radio" name="genre" id="fantasy" value="fantasy" />
-            Фантастика</label
-          >
-          <label for="bio"
-            ><input type="radio" name="genre" id="bio" value="bio" />
-            Биография</label
-          >
+          <h3>Жанр</h3>
+          <div id="category-filters">
+            <label>
+              <input type="radio" name="category" value="" checked />
+              Загрузка...
+            </label>
+          </div>
         </div>
 
         <div class="filter-group">
-          <strong>Цена:</strong>
-          <label for="all-price"
-            ><input
-              type="radio"
-              name="price"
-              id="all-price"
-              value="all"
-              checked
-            />
-            Все</label
-          >
-          <label for="price-low"
-            ><input type="radio" name="price" id="price-low" value="low" />
-            500–1000 руб.</label
-          >
-          <label for="price-high"
-            ><input type="radio" name="price" id="price-high" value="high" />
-            1000–2000 руб.</label
-          >
+          <h3>Цена</h3>
+          <div id="price-filters">
+            <label>
+              <input type="radio" name="price" value="all" checked />
+              Все цены
+            </label>
+            <label>
+              <input type="radio" name="price" value="low" />
+              До 1000 руб.
+            </label>
+            <label>
+              <input type="radio" name="price" value="medium" />
+              1000-2000 руб.
+            </label>
+            <label>
+              <input type="radio" name="price" value="high" />
+              От 2000 руб.
+            </label>
+          </div>
         </div>
 
         <div class="filter-group">
-          <strong>Автор:</strong>
-          <label for="all-author"
-            ><input
-              type="radio"
-              name="author"
-              id="all-author"
-              value="all"
-              checked
-            />
-            Все</label
-          >
-          <label for="russian"
-            ><input type="radio" name="author" id="russian" value="russian" />
-            Русский</label
-          >
-          <label for="foreign"
-            ><input type="radio" name="author" id="foreign" value="foreign" />
-            Зарубежный</label
-          >
+          <h3>Автор</h3>
+          <div id="author-type-filters">
+            <label>
+              <input type="radio" name="authorType" value="all" checked />
+              Все авторы
+            </label>
+            <label>
+              <input type="radio" name="authorType" value="russian" />
+              Русские
+            </label>
+            <label>
+              <input type="radio" name="authorType" value="foreign" />
+              Зарубежные
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- КАРТОЧКИ -->
-      <section class="books" id="books-container">
-        <div class="loading">
-          <p>Загрузка каталога книг...</p>
+      <!-- Catalog Controls -->
+      <div class="catalog-controls">
+        <div class="items-per-page">
+          <label for="items-per-page">Показывать на странице:</label>
+          <select id="items-per-page">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
         </div>
-      </section>
+        <div id="page-info" class="page-info">Загрузка...</div>
+      </div>
+
+      <!-- Loading Indicator -->
+      <div id="loading" class="loading" style="display: none">
+        <p>Загрузка книг...</p>
+      </div>
+
+      <!-- Books Container -->
+      <div id="books-container" class="books-grid">
+        <div class="loading">
+          <p>Загрузка каталога...</p>
+        </div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div id="pagination-controls" class="pagination"></div>
     </main>
 
-    <script src="../scripts/book-data.js"></script>
-    <script src="../scripts/book-catalog.js"></script>
-    <script src="../scripts/filters.js"></script>
+    <script src="../scripts/catalog.js"></script>
   </body>
 </html>
