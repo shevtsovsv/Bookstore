@@ -25,6 +25,7 @@ const getBooks = async (req, res) => {
       minPrice,
       maxPrice,
       inStock = true,
+      authorType,
     } = req.query;
 
     // Валидация параметров
@@ -64,6 +65,20 @@ const getBooks = async (req, res) => {
       whereConditions.publisherId = publisher;
     }
 
+    // Условия для включения авторов с фильтром по типу
+    const authorInclude = {
+      model: Author,
+      as: "authors",
+      attributes: ["id", "name", "authorType"],
+      through: { attributes: [] },
+    };
+
+    // Фильтр по типу автора (russian/foreign)
+    if (authorType && (authorType === "russian" || authorType === "foreign")) {
+      authorInclude.where = { authorType };
+      authorInclude.required = true; // INNER JOIN для фильтрации
+    }
+
     // Сортировка
     const allowedSortFields = ["popularity", "price", "title", "createdAt"];
     const sortField = allowedSortFields.includes(sortBy)
@@ -85,12 +100,7 @@ const getBooks = async (req, res) => {
           as: "publisher",
           attributes: ["id", "name", "country"],
         },
-        {
-          model: Author,
-          as: "authors",
-          attributes: ["id", "name"],
-          through: { attributes: [] },
-        },
+        authorInclude,
       ],
       order: [[sortField, sortDirection]],
       limit: limitNum,
@@ -122,6 +132,7 @@ const getBooks = async (req, res) => {
             book.authors?.map((author) => ({
               id: author.id,
               name: author.name,
+              authorType: author.authorType,
             })) || [],
         })),
         pagination: {
@@ -170,7 +181,7 @@ const getPopularBooks = async (req, res) => {
         {
           model: Author,
           as: "authors",
-          attributes: ["id", "name"],
+          attributes: ["id", "name", "authorType"],
           through: { attributes: [] },
         },
       ],
@@ -196,6 +207,7 @@ const getPopularBooks = async (req, res) => {
             book.authors?.map((author) => ({
               id: author.id,
               name: author.name,
+              authorType: author.authorType,
             })) || [],
         })),
       },
@@ -231,7 +243,7 @@ const getBookById = async (req, res) => {
         {
           model: Author,
           as: "authors",
-          attributes: ["id", "name", "bio"],
+          attributes: ["id", "name", "bio", "authorType"],
           through: { attributes: [] },
         },
       ],
@@ -264,6 +276,7 @@ const getBookById = async (req, res) => {
               id: author.id,
               name: author.name,
               bio: author.bio,
+              authorType: author.authorType,
             })) || [],
           isAvailable: book.stock > 0,
           isLowStock: book.stock > 0 && book.stock <= 5,
