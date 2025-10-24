@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отладка обработчиков событий</title>
+    <link rel="stylesheet" href="../style/style.css">
+    <style>
+        .debug-panel {
+            background: #f0f0f0;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .debug-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Отладка обработчиков событий каталога</h1>
+    
+    <div class="debug-panel">
+        <h3>Отладочные функции:</h3>
+        <button class="debug-button" onclick="checkElements()">Проверить элементы</button>
+        <button class="debug-button" onclick="loadAndRender()">Загрузить и отрендерить книги</button>
+        <button class="debug-button" onclick="setupEvents()">Настроить события</button>
+    </div>
+    
+    <div id="debug-output" class="debug-panel">
+        <div>Готово к отладке...</div>
+    </div>
+    
+    <div id="books-container"></div>
+    
+    <script>
+        let debugOutput = document.getElementById('debug-output');
+        
+        function log(message) {
+            console.log(message);
+            debugOutput.innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+        }
+        
+        function checkElements() {
+            log('=== Проверка элементов ===');
+            log('Кнопки "Подробнее": ' + document.querySelectorAll('.btn-details').length);
+            log('Кнопки "Заказать": ' + document.querySelectorAll('.btn-order').length);
+            log('Карточки книг: ' + document.querySelectorAll('.book-card').length);
+            log('Контейнер книг: ' + (document.getElementById('books-container') ? 'найден' : 'не найден'));
+        }
+        
+        async function loadAndRender() {
+            log('=== Загрузка и рендеринг ===');
+            try {
+                const response = await fetch('../data/books.json');
+                const data = await response.json();
+                log('Загружено книг: ' + data.books.length);
+                
+                const container = document.getElementById('books-container');
+                let html = '';
+                
+                data.books.slice(0, 2).forEach(book => {
+                    html += `
+                        <div id="${book.id}" class="book-card" data-book-id="${book.id}">
+                            <div class="book-info">
+                                <h3>${book.title}</h3>
+                                <p>Автор: ${book.author}</p>
+                                <p>Цена: ${book.price} руб.</p>
+                                <div class="book-actions">
+                                    <button class="btn btn-order" data-book-id="${book.id}">Заказать</button>
+                                    <button class="btn btn-details" data-book-id="${book.id}">Подробнее</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                log('HTML вставлен в контейнер');
+                checkElements();
+                
+            } catch (error) {
+                log('Ошибка: ' + error.message);
+            }
+        }
+        
+        function setupEvents() {
+            log('=== Настройка событий ===');
+            
+            // Обработчики для кнопок "Подробнее"
+            document.querySelectorAll('.btn-details').forEach((button, index) => {
+                log(`Настраиваем кнопку "Подробнее" #${index}`);
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const bookId = this.getAttribute('data-book-id');
+                    log('🔍 Переход к деталям книги: ' + bookId);
+                    // window.location.href = `book-detail.html?id=${bookId}`;
+                    alert('Переход к книге: ' + bookId);
+                });
+            });
+            
+            // Обработчики для кнопок "Заказать"
+            document.querySelectorAll('.btn-order').forEach((button, index) => {
+                log(`Настраиваем кнопку "Заказать" #${index}`);
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const bookId = this.getAttribute('data-book-id');
+                    log('🛒 Заказ книги: ' + bookId);
+                    alert('Заказ книги: ' + bookId);
+                });
+            });
+            
+            // Обработчики для кликов по карточкам
+            document.querySelectorAll('.book-card').forEach((card, index) => {
+                log(`Настраиваем карточку #${index}`);
+                card.addEventListener('click', function(e) {
+                    log('Клик по карточке, target: ' + e.target.tagName);
+                    if (!e.target.closest('.book-actions')) {
+                        const bookId = this.getAttribute('data-book-id');
+                        log('📚 Клик по карточке книги: ' + bookId);
+                        alert('Клик по карточке: ' + bookId);
+                    } else {
+                        log('Клик по кнопке, игнорируем');
+                    }
+                });
+                card.style.cursor = 'pointer';
+            });
+            
+            log('События настроены');
+        }
+    </script>
+</body>
+</html>

@@ -131,6 +131,13 @@ h1 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
   flex-wrap: wrap;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.book-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .book-cover {
@@ -1394,5 +1401,377 @@ h1 {
 
   .end-of-catalog p:first-child {
     font-size: 16px;
+  }
+}
+
+/* ========== Book Detail Page ========== */
+
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: #27ae60;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.book-detail {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 40px;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.book-detail-image {
+  text-align: center;
+}
+
+.book-detail-image img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.book-detail-info h1 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+.book-meta {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.book-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.book-meta-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 120px;
+}
+
+.book-meta-value {
+  color: #333;
+}
+
+.publisher-link {
+  color: #27ae60;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.publisher-link:hover {
+  color: #219150;
+  text-decoration: underline;
+}
+
+.book-price {
+  font-size: 24px;
+  font-weight: 700;
+  color: #27ae60;
+  margin: 20px 0;
+}
+
+.book-description {
+  margin: 25px 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+.book-description h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.book-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.btn-add-to-cart {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  max-width: 200px;
+}
+
+.btn-add-to-cart:hover {
+  background: #219150;
+  transform: translateY(-2px);
+}
+
+.btn-add-to-cart:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background: #7f8c8d;
+  transform: translateY(-2px);
+}
+
+/* ========== Modal ========== */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 22px;
+}
+
+.modal-close {
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 25px;
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+}
+
+.publisher-info {
+  display: grid;
+  gap: 15px;
+}
+
+.publisher-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.publisher-info-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.publisher-info-value {
+  color: #333;
+  line-height: 1.5;
+}
+
+.publisher-website {
+  color: #27ae60;
+  text-decoration: none;
+}
+
+.publisher-website:hover {
+  text-decoration: underline;
+}
+
+/* ========== Notifications ========== */
+
+#notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1100;
+}
+
+.notification {
+  background: #27ae60;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateX(400px);
+  transition: transform 0.3s ease;
+  min-width: 300px;
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification.error {
+  background: #e74c3c;
+}
+
+.notification.warning {
+  background: #f39c12;
+}
+
+.notification.info {
+  background: #3498db;
+}
+
+/* ========== Responsive Design for Book Detail ========== */
+
+@media (max-width: 768px) {
+  .book-detail {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 20px;
+  }
+
+  .book-detail-image img {
+    max-width: 300px;
+  }
+
+  .book-detail-info h1 {
+    font-size: 24px;
+  }
+
+  .book-actions {
+    flex-direction: column;
+  }
+
+  .btn-add-to-cart,
+  .btn-secondary {
+    max-width: none;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+
+  .modal-header,
+  .modal-body {
+    padding: 20px;
+  }
+
+  .publisher-info-item {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .publisher-info-label {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    font-size: 12px;
+  }
+
+  .book-detail {
+    padding: 15px;
+  }
+
+  .book-detail-info h1 {
+    font-size: 20px;
+  }
+
+  .book-meta-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .book-meta-label {
+    min-width: auto;
+  }
+
+  .btn-add-to-cart,
+  .btn-secondary {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .notification {
+    min-width: auto;
+    margin: 0 10px 10px 0;
   }
 }

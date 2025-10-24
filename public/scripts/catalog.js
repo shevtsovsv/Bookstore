@@ -451,13 +451,13 @@
    */
   function createBookCardHTML(book) {
     return `
-      <div class="book-card">
+      <div class="book-card" onclick="window.location.href='book-detail.html?id=${book.id}'" style="cursor: pointer;">
         <img
-          src="/img/${book.image || "placeholder.jpg"}"
+          src="../img/${book.image || "placeholder.jpg"}"
           alt="${book.title}"
           class="book-cover"
           loading="lazy"
-          onerror="this.src='/img/placeholder.jpg'"
+          onerror="this.src='../img/placeholder.jpg'"
         />
         <div class="book-info">
           <h3>${book.title}</h3>
@@ -472,12 +472,12 @@
           <p><strong>Цена:</strong> ${book.price} руб.</p>
           <p class="book-description">${book.shortDescription || ""}</p>
           <div class="book-actions">
-            <a href="/html/book-detail.html?id=${
+            <a href="book-detail.html?id=${
               book.id
-            }" class="btn btn-details">
+            }" class="btn btn-details" onclick="event.stopPropagation();">
               Подробнее
             </a>
-            <button class="btn btn-order" onclick="orderBook(${book.id}, '${
+            <button class="btn btn-order" onclick="event.stopPropagation(); orderBook(${book.id}, '${
       book.title
     }')">
               Заказать
@@ -706,13 +706,13 @@
     const html = state.books
       .map(
         (book) => `
-      <div class="book-card">
+      <div class="book-card" onclick="window.location.href='book-detail.html?id=${book.id}'" style="cursor: pointer;">
         <img
-          src="/img/${book.image || "placeholder.jpg"}"
+          src="../img/${book.image || "placeholder.jpg"}"
           alt="${book.title}"
           class="book-cover"
           loading="lazy"
-          onerror="this.src='/img/placeholder.jpg'"
+          onerror="this.src='../img/placeholder.jpg'"
         />
         <div class="book-info">
           <h3>${book.title}</h3>
@@ -727,12 +727,12 @@
           <p><strong>Цена:</strong> ${book.price} руб.</p>
           <p class="book-description">${book.shortDescription || ""}</p>
           <div class="book-actions">
-            <a href="/html/book-detail.html?id=${
+            <a href="book-detail.html?id=${
               book.id
-            }" class="btn btn-details">
+            }" class="btn btn-details" onclick="event.stopPropagation();">
               Подробнее
             </a>
-            <button class="btn btn-order" onclick="orderBook(${book.id}, '${
+            <button class="btn btn-order" onclick="event.stopPropagation(); orderBook(${book.id}, '${
           book.title
         }')">
               Заказать

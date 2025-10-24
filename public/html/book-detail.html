@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title id="page-title">Загрузка...</title>
+    <title id="page-title">Детали книги - Книжный магазин</title>
     <link rel="stylesheet" href="../style/style.css" />
   </head>
   <body>
@@ -24,14 +24,109 @@
     </header>
 
     <main class="container">
-      <article id="book-details">
-        <div class="loading">
-          <p>Загрузка информации о книге...</p>
-        </div>
-      </article>
-  </main>
+      <!-- Хлебные крошки -->
+      <nav class="breadcrumb">
+        <a href="../index.html">Главная</a> &gt; 
+        <a href="book.html">Каталог</a> &gt; 
+        <span id="breadcrumb-title">Книга</span>
+      </nav>
 
-  <script src="../scripts/book-data.js"></script>
-  <script src="../scripts/book-details.js"></script>
-</body>
+      <!-- Детальная информация о книге -->
+      <div class="book-detail">
+        <div class="book-detail-image">
+          <img id="book-image" src="../img/book1.jpg" alt="Обложка книги">
+        </div>
+        
+        <div class="book-detail-info">
+          <h1 id="book-title">Загрузка...</h1>
+          
+          <div class="book-meta">
+            <div class="book-meta-item">
+              <span class="book-meta-label">Авторы:</span>
+              <span class="book-meta-value" id="book-authors">-</span>
+            </div>
+            <div class="book-meta-item">
+              <span class="book-meta-label">Категория:</span>
+              <span class="book-meta-value" id="book-category">-</span>
+            </div>
+            <div class="book-meta-item">
+              <span class="book-meta-label">Издательство:</span>
+              <span class="book-meta-value" id="book-publisher">-</span>
+            </div>
+            <div class="book-meta-item">
+              <span class="book-meta-label">Страниц:</span>
+              <span class="book-meta-value" id="book-pages">-</span>
+            </div>
+            <div class="book-meta-item">
+              <span class="book-meta-label">Год издания:</span>
+              <span class="book-meta-value" id="book-year">-</span>
+            </div>
+            <div class="book-meta-item">
+              <span class="book-meta-label">ISBN:</span>
+              <span class="book-meta-value" id="book-isbn">-</span>
+            </div>
+          </div>
+          
+          <div class="book-price" id="book-price">-</div>
+          
+          <div class="book-description">
+            <h3>Описание</h3>
+            <p id="book-description">-</p>
+          </div>
+          
+          <div class="book-actions">
+            <button id="add-to-cart-btn" class="btn-add-to-cart">
+              Добавить в корзину
+            </button>
+            <a href="book.html" class="btn-secondary">
+              Вернуться к каталогу
+            </a>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Модальное окно издательства -->
+    <div id="publisher-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Информация об издательстве</h2>
+          <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="publisher-info">
+            <div class="publisher-info-item">
+              <span class="publisher-info-label">Название:</span>
+              <span class="publisher-info-value" id="publisher-name">-</span>
+            </div>
+            <div class="publisher-info-item">
+              <span class="publisher-info-label">Описание:</span>
+              <span class="publisher-info-value" id="publisher-description">-</span>
+            </div>
+            <div class="publisher-info-item">
+              <span class="publisher-info-label">Страна:</span>
+              <span class="publisher-info-value" id="publisher-country">-</span>
+            </div>
+            <div class="publisher-info-item">
+              <span class="publisher-info-label">Год основания:</span>
+              <span class="publisher-info-value" id="publisher-founded">-</span>
+            </div>
+            <div class="publisher-info-item">
+              <span class="publisher-info-label">Веб-сайт:</span>
+              <span class="publisher-info-value" id="publisher-website">-</span>
+            </div>
+            <div class="publisher-info-item">
+              <span class="publisher-info-label">Email:</span>
+              <span class="publisher-info-value" id="publisher-email">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Контейнер для уведомлений -->
+    <div id="notification-container"></div>
+
+    <script src="../scripts/book-details.js"></script>
+  </body>
 </html>

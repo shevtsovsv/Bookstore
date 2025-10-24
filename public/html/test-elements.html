@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест элементов HTML</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <h1>Тест элементов HTML детальной страницы</h1>
+    
+    <div id="test-results" style="background: #f0f0f0; padding: 15px; margin: 20px 0;"></div>
+    
+    <!-- Копия структуры из book-detail.html -->
+    <div class="book-detail">
+        <div class="book-detail-image">
+            <img id="book-image" src="../img/book1.jpg" alt="Обложка книги">
+        </div>
+        
+        <div class="book-detail-info">
+            <h1 id="book-title">Тестовый заголовок</h1>
+            
+            <div class="book-meta">
+                <div class="book-meta-item">
+                    <span class="book-meta-label">Авторы:</span>
+                    <span class="book-meta-value" id="book-authors">Тест автор</span>
+                </div>
+                <div class="book-meta-item">
+                    <span class="book-meta-label">Категория:</span>
+                    <span class="book-meta-value" id="book-category">Тест категория</span>
+                </div>
+                <div class="book-meta-item">
+                    <span class="book-meta-label">Издательство:</span>
+                    <span class="book-meta-value" id="book-publisher">Тест издательство</span>
+                </div>
+                <div class="book-meta-item">
+                    <span class="book-meta-label">Страниц:</span>
+                    <span class="book-meta-value" id="book-pages">123 стр.</span>
+                </div>
+                <div class="book-meta-item">
+                    <span class="book-meta-label">Год издания:</span>
+                    <span class="book-meta-value" id="book-year">2023</span>
+                </div>
+                <div class="book-meta-item">
+                    <span class="book-meta-label">ISBN:</span>
+                    <span class="book-meta-value" id="book-isbn">123-456-789</span>
+                </div>
+            </div>
+            
+            <div class="book-price" id="book-price">999 ₽</div>
+            
+            <div class="book-description">
+                <h3>Описание</h3>
+                <p id="book-description">Тестовое описание книги</p>
+            </div>
+            
+            <div class="book-actions">
+                <button id="add-to-cart-btn" class="btn-add-to-cart">
+                    Добавить в корзину
+                </button>
+                <a href="book.html" class="btn-secondary">
+                    Вернуться к каталогу
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function checkElements() {
+            const elements = [
+                'book-image',
+                'book-title',
+                'book-authors',
+                'book-category',
+                'book-publisher',
+                'book-pages',
+                'book-year',
+                'book-isbn',
+                'book-price',
+                'book-description',
+                'add-to-cart-btn'
+            ];
+            
+            const results = document.getElementById('test-results');
+            let html = '<h3>Проверка элементов:</h3>';
+            
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                const exists = element !== null;
+                const color = exists ? 'green' : 'red';
+                const status = exists ? '✓' : '✗';
+                const content = exists ? element.textContent || element.alt || '[пустой]' : 'Не найден';
+                
+                html += `<p style="color: ${color};">${status} ${id}: ${content}</p>`;
+            });
+            
+            results.innerHTML = html;
+        }
+        
+        // Проверяем элементы при загрузке
+        document.addEventListener('DOMContentLoaded', checkElements);
+        
+        // Тестируем обновление элементов
+        setTimeout(() => {
+            const testBook = {
+                id: 'test1',
+                title: 'Тестовая книга',
+                author: 'Тестовый автор',
+                genre: 'Тестовый жанр',
+                price: 1500,
+                image: 'book1.jpg',
+                fullDescription: 'Тестовое полное описание книги для проверки работы.'
+            };
+            
+            console.log('Тестируем обновление элементов...');
+            
+            // Обновляем заголовок
+            const title = document.getElementById('book-title');
+            if (title) title.textContent = testBook.title;
+            
+            // Обновляем автора
+            const authors = document.getElementById('book-authors');
+            if (authors) authors.textContent = testBook.author;
+            
+            // Обновляем категорию
+            const category = document.getElementById('book-category');
+            if (category) category.textContent = testBook.genre;
+            
+            // Обновляем цену
+            const price = document.getElementById('book-price');
+            if (price) price.textContent = testBook.price + ' ₽';
+            
+            // Обновляем описание
+            const description = document.getElementById('book-description');
+            if (description) description.textContent = testBook.fullDescription;
+            
+            console.log('Элементы обновлены');
+            
+            // Перепроверяем элементы
+            setTimeout(checkElements, 100);
+            
+        }, 2000);
+    </script>
+</body>
+</html>

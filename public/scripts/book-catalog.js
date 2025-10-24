@@ -149,7 +149,7 @@
     const classNames = book.classes.join(" ");
 
     return `
-      <div id="${book.id}" class="book-card ${classNames}">
+      <div id="${book.id}" class="book-card ${classNames}" data-book-id="${book.id}">
         <img
           src="../img/${book.image}"
           alt="${book.title} — обложка"
@@ -159,21 +159,22 @@
           height="350"
         />
         <div class="book-info">
+          <h3>${book.title}</h3>
           <p><strong>Автор:</strong> ${book.author}</p>
           <p><strong>Жанр:</strong> ${book.genre}</p>
           <p><strong>Описание:</strong> ${book.shortDescription}</p>
           <p><strong>Цена:</strong> ${book.price} руб.</p>
-          <div>
-            <a
-              href="book-detail.html?id=${book.id}"
-              class="buy-btn"
-              aria-label="Подробнее о книге ${book.title}"
-            >Подробнее</a>
+          <div class="book-actions">
             <button 
-              class="buy-btn" 
-              onclick="orderBook('${book.id}')"
+              class="btn btn-order" 
+              data-book-id="${book.id}"
               aria-label="Заказать ${book.title}"
             >Заказать</button>
+            <button 
+              class="btn btn-details" 
+              data-book-id="${book.id}"
+              aria-label="Подробнее о книге ${book.title}"
+            >Подробнее</button>
           </div>
         </div>
       </div>
@@ -213,6 +214,68 @@
       card.style.setProperty('display', 'flex', 'important');
     });
     console.log("🎨 Стили применены принудительно");
+    
+    // Добавляем обработчики событий
+    setupCardEventListeners();
+  }
+
+  // Настройка обработчиков событий для карточек
+  function setupCardEventListeners() {
+    console.log("🎯 Настраиваем обработчики событий...");
+    
+    // Проверяем, сколько элементов найдено
+    const detailButtons = document.querySelectorAll('.btn-details');
+    const orderButtons = document.querySelectorAll('.btn-order');
+    const bookCards = document.querySelectorAll('.book-card');
+    
+    console.log("Найдено кнопок 'Подробнее':", detailButtons.length);
+    console.log("Найдено кнопок 'Заказать':", orderButtons.length);
+    console.log("Найдено карточек книг:", bookCards.length);
+    
+    // Обработчики для кнопок "Подробнее"
+    detailButtons.forEach((button, index) => {
+      console.log(`Настраиваем кнопку "Подробнее" #${index}`, button);
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const bookId = this.getAttribute('data-book-id');
+        console.log("🔍 Переход к деталям книги:", bookId);
+        window.location.href = `book-detail.html?id=${bookId}`;
+      });
+    });
+    
+    // Обработчики для кнопок "Заказать"
+    orderButtons.forEach((button, index) => {
+      console.log(`Настраиваем кнопку "Заказать" #${index}`, button);
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const bookId = this.getAttribute('data-book-id');
+        console.log("🛒 Заказ книги:", bookId);
+        orderBook(bookId);
+      });
+    });
+    
+    // Обработчики для кликов по карточкам
+    bookCards.forEach((card, index) => {
+      console.log(`Настраиваем карточку #${index}`, card);
+      card.addEventListener('click', function(e) {
+        console.log("Клик по карточке, target:", e.target);
+        // Проверяем, что клик не по кнопке
+        if (!e.target.closest('.book-actions')) {
+          const bookId = this.getAttribute('data-book-id');
+          console.log("📚 Клик по карточке книги:", bookId);
+          window.location.href = `book-detail.html?id=${bookId}`;
+        } else {
+          console.log("Клик по кнопке, игнорируем");
+        }
+      });
+      
+      // Добавляем курсор pointer
+      card.style.cursor = 'pointer';
+    });
+    
+    console.log("✅ Обработчики событий настроены");
   }
 
   // Показываем ошибку загрузки
