@@ -4,8 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
- <title>Каталог книг - Книжный магазин</title>
-     <link rel="stylesheet" href="../style/style.css" />
+    <title>Каталог книг - Книжный магазин</title>
+    <link rel="stylesheet" href="../style/style.css" />
   </head>
   <body>
     <header>
@@ -28,75 +28,77 @@
     </header>
 
     <main class="container">
-<h1>Каталог книг</h1>
- <!-- Filters Section -->
+      <h1>Каталог книг</h1>
+      <!-- Filters Section -->
       <div class="filters-section">
         <h2>Фильтры</h2>
-<div class="filter-group">
-<h3>Жанр</h3>
-          <div id="category-filters">
-            <label>
-              <input type="radio" name="category" value="" checked />
-              Загрузка...
-            </label>
+        <div class="filters-row">
+          <div class="filter-item">
+            <label for="category-select">Жанр:</label>
+            <select id="category-select" name="category">
+              <option value="">Все жанры</option>
+              <!-- Options will be populated by JavaScript -->
+            </select>
           </div>
-        </div>
 
-        <div class="filter-group">
- <h3>Цена</h3>
-          <div id="price-filters">
-            <label>
-              <input type="radio" name="price" value="all" checked />
-              Все цены
-            </label>
-            <label>
-              <input type="radio" name="price" value="low" />
-              До 1000 руб.
-            </label>
-            <label>
-              <input type="radio" name="price" value="medium" />
-              1000-2000 руб.
-            </label>
-            <label>
-              <input type="radio" name="price" value="high" />
-              От 2000 руб.
-            </label>
+          <div class="filter-item">
+            <label for="price-select">Цена:</label>
+            <select id="price-select" name="price">
+              <option value="all">Все цены</option>
+              <option value="low">До 1000 руб.</option>
+              <option value="medium">1000-2000 руб.</option>
+              <option value="high">От 2000 руб.</option>
+            </select>
           </div>
-        </div>
 
-        <div class="filter-group">
-<h3>Автор</h3>
-          <div id="author-type-filters">
-            <label>
-              <input type="radio" name="authorType" value="all" checked />
-              Все авторы
-            </label>
-            <label>
-              <input type="radio" name="authorType" value="russian" />
-              Русские
-            </label>
-            <label>
-              <input type="radio" name="authorType" value="foreign" />
-              Зарубежные
-            </label>
+          <div class="filter-item">
+            <label for="author-type-select">Автор:</label>
+            <select id="author-type-select" name="authorType">
+              <option value="all">Все авторы</option>
+              <option value="russian">Русские</option>
+              <option value="foreign">Зарубежные</option>
+            </select>
           </div>
         </div>
       </div>
 
       <!-- Catalog Controls -->
       <div class="catalog-controls">
-        <div class="items-per-page">
-          <label for="items-per-page">Показывать на странице:</label>
-          <select id="items-per-page">
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-          </select>
-</div>
-        <div id="page-info" class="page-info">Загрузка...</div>
+        <div class="left-controls">
+          <div class="items-per-page">
+            <label for="items-per-page">Показывать на странице:</label>
+            <div class="items-control-group">
+              <select id="items-per-page">
+                <option value="4">4</option>
+                <option value="8">8</option>
+                <option value="12">12</option>
+                <option value="16" selected>16</option>
+                <option value="20">20</option>
+                <option value="24">24</option>
+                <option value="28">28</option>
+                <option value="all">📜 Показать все (лента)</option>
+                <option value="custom">Другое</option>
+              </select>
+              <input
+                type="number"
+                id="custom-items"
+                placeholder="Введите число"
+                min="1"
+                max="1000"
+                style="display: none"
+              />
+              <button id="apply-custom" style="display: none">Применить</button>
+            </div>
+          </div>
+          <div id="page-info" class="page-info">Загрузка...</div>
+        </div>
+
+        <div class="right-controls">
+          <!-- Pagination Controls -->
+          <div id="pagination-controls" class="pagination"></div>
+        </div>
       </div>
-<!-- Loading Indicator -->
+      <!-- Loading Indicator -->
       <div id="loading" class="loading" style="display: none">
         <p>Загрузка книг...</p>
       </div>
@@ -104,13 +106,54 @@
       <!-- Books Container -->
       <div id="books-container" class="books-grid">
         <div class="loading">
-<p>Загрузка каталога...</p>
+          <p>Загрузка каталога...</p>
         </div>
- </div>
+      </div>
 
-      <!-- Pagination Controls -->
-      <div id="pagination-controls" class="pagination"></div>
+      <!-- Infinite Scroll Elements -->
+      <div
+        id="infinite-scroll-info"
+        class="infinite-scroll-info"
+        style="display: none"
+      >
+        <p>
+          📜 Режим "Показать все" - книги загружаются автоматически при
+          прокрутке
+        </p>
+        <div class="progress-container">
+          <div class="progress-text">
+            Загружено: <span id="loaded-count">0</span> из
+            <span id="total-count">0</span> книг
+          </div>
+          <div class="progress-bar">
+            <div
+              id="progress-fill"
+              class="progress-fill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+        <button id="switch-back-btn" class="switch-back-btn">
+          Вернуться к страницам
+        </button>
+      </div>
+
+      <div id="loading-more" class="loading-more-books" style="display: none">
+        <p>⏳ Загружаем ещё книги...</p>
+      </div>
+
+      <div id="end-of-catalog" class="end-of-catalog" style="display: none">
+        <p>🎉 Все книги загружены!</p>
+        <p>Найдено <span id="final-count">0</span> книг по вашему запросу</p>
+      </div>
+
+      <!-- Scroll Sentinel (invisible element for intersection observer) -->
+      <div
+        id="scroll-sentinel"
+        class="scroll-sentinel"
+        style="display: none"
+      ></div>
     </main>
-<script src="../scripts/catalog.js"></script>
+    <script src="../scripts/catalog.js"></script>
   </body>
 </html>

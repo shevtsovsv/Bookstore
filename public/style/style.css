@@ -690,6 +690,72 @@ h1 {
   font-size: 24px;
 }
 
+/* Horizontal filters row */
+.filters-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 150px;
+  flex: 1;
+}
+
+.filter-item label {
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+}
+
+.filter-item select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-item select:hover {
+  border-color: #27ae60;
+}
+
+.filter-item select:focus {
+  border-color: #27ae60;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+/* Responsive filters */
+@media (max-width: 768px) {
+  .filters-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .filter-item {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .filters-section {
+    padding: 15px;
+  }
+
+  .filters-section h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+}
+
 .filter-group {
   margin-bottom: 20px;
 }
@@ -725,21 +791,48 @@ h1 {
   align-items: center;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.left-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .items-per-page {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .items-per-page label {
   font-weight: 500;
   color: #333;
+  white-space: nowrap;
 }
 
-.items-per-page select {
+.items-control-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.items-per-page select,
+.items-per-page input[type="number"] {
   padding: 8px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -750,21 +843,48 @@ h1 {
 }
 
 .items-per-page select:hover,
-.items-per-page select:focus {
+.items-per-page select:focus,
+.items-per-page input[type="number"]:hover,
+.items-per-page input[type="number"]:focus {
   border-color: #27ae60;
   outline: none;
+}
+
+.items-per-page input[type="number"] {
+  width: 120px;
+  cursor: text;
+}
+
+#apply-custom {
+  padding: 8px 16px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#apply-custom:hover {
+  background: #219150;
+}
+
+#apply-custom:active {
+  transform: scale(0.98);
 }
 
 .page-info {
   color: #666;
   font-size: 14px;
+  white-space: nowrap;
 }
 
 /* Books Grid */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
   margin-bottom: 30px;
 }
 
@@ -772,7 +892,7 @@ h1 {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -785,10 +905,10 @@ h1 {
 
 .books-grid .book-cover {
   width: 100%;
-  height: 350px;
+  height: 280px;
   object-fit: cover;
   border-radius: 6px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .books-grid .book-info {
@@ -798,42 +918,44 @@ h1 {
 }
 
 .books-grid .book-info h3 {
-  margin: 0 0 10px 0;
-  font-size: 18px;
+  margin: 0 0 8px 0;
+  font-size: 16px;
   color: #333;
+  line-height: 1.3;
 }
 
 .books-grid .book-info p {
-  margin: 5px 0;
-  font-size: 14px;
+  margin: 4px 0;
+  font-size: 13px;
   color: #666;
 }
 
 .books-grid .book-description {
   flex: 1;
-  margin: 10px 0;
-  line-height: 1.5;
+  margin: 8px 0;
+  line-height: 1.4;
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
 .books-grid .book-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   margin-top: auto;
-  padding-top: 15px;
+  padding-top: 12px;
 }
 
 .books-grid .btn {
   flex: 1;
-  padding: 10px 15px;
+  padding: 8px 12px;
   border: none;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   text-align: center;
@@ -866,22 +988,20 @@ h1 {
 /* Pagination */
 .pagination {
   display: flex;
-  justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 30px 0;
   flex-wrap: wrap;
 }
 
 .page-btn {
-  padding: 8px 12px;
+  padding: 6px 10px;
   border: 1px solid #ddd;
   background: white;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.2s;
-  min-width: 40px;
+  min-width: 35px;
 }
 
 .page-btn:hover:not(:disabled) {
@@ -902,8 +1022,9 @@ h1 {
 }
 
 .page-ellipsis {
-  padding: 8px 4px;
+  padding: 6px 4px;
   color: #999;
+  font-size: 13px;
 }
 
 /* Loading State */
@@ -957,33 +1078,271 @@ h1 {
   background: #219150;
 }
 
+/* ========== Infinite Scroll Styles ========== */
+
+/* Infinite Scroll Info Panel */
+.infinite-scroll-info {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.infinite-scroll-info p {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.progress-container {
+  margin: 15px 0;
+}
+
+.progress-text {
+  color: #6c757d;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.switch-back-btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.switch-back-btn:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.switch-back-btn:active {
+  transform: translateY(0);
+}
+
+/* Loading More Indicator */
+.loading-more-books {
+  text-align: center;
+  padding: 30px 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+}
+
+.loading-more-books p {
+  color: #6c757d;
+  font-size: 16px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading-more-books p::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #27ae60;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* End of Catalog */
+.end-of-catalog {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  border-top: 4px solid #27ae60;
+}
+
+.end-of-catalog p:first-child {
+  font-size: 18px;
+  font-weight: 600;
+  color: #27ae60;
+  margin: 0 0 10px 0;
+}
+
+.end-of-catalog p:last-child {
+  color: #6c757d;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Scroll Sentinel (invisible trigger element) */
+.scroll-sentinel {
+  height: 1px;
+  width: 100%;
+  position: relative;
+}
+
+/* Animations for new books */
+.book-card.fade-in {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .books-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
 @media (max-width: 768px) {
   .books-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .catalog-controls {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .left-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .right-controls {
+    justify-content: center;
   }
 
   .pagination {
+    justify-content: center;
     gap: 5px;
   }
 
   .page-btn {
-    padding: 6px 10px;
-    font-size: 13px;
-    min-width: 35px;
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: 30px;
   }
 
   .filters-section {
     padding: 15px;
   }
+
+  .books-grid .book-cover {
+    height: 240px;
+  }
+
+  .books-grid .book-info h3 {
+    font-size: 15px;
+  }
+
+  .books-grid .book-info p {
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 480px) {
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-controls {
+    padding: 12px;
+  }
+
+  .left-controls {
+    gap: 12px;
+  }
+
+  .items-per-page {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .items-control-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pagination {
+    gap: 4px;
+  }
+
+  .page-btn {
+    padding: 5px 6px;
+    font-size: 11px;
+    min-width: 28px;
+  }
+
   .books-grid .book-cover {
     height: 280px;
   }
@@ -994,5 +1353,46 @@ h1 {
 
   .books-grid .btn {
     width: 100%;
+  }
+
+  .books-grid .book-info h3 {
+    font-size: 16px;
+  }
+
+  .books-grid .book-info p {
+    font-size: 13px;
+  }
+
+  /* Infinite Scroll Mobile Styles */
+  .infinite-scroll-info {
+    padding: 15px;
+    margin: 15px 0;
+  }
+
+  .infinite-scroll-info p {
+    font-size: 14px;
+  }
+
+  .progress-text {
+    font-size: 13px;
+  }
+
+  .switch-back-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .loading-more-books,
+  .end-of-catalog {
+    padding: 25px 15px;
+    margin: 15px 0;
+  }
+
+  .loading-more-books p {
+    font-size: 14px;
+  }
+
+  .end-of-catalog p:first-child {
+    font-size: 16px;
   }
 }
