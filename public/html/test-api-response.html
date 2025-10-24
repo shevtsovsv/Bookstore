@@ -1,109 +1,159 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Тест API ответа</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .api-response { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; white-space: pre-wrap; }
-        .book-display { background: #e8f5e8; padding: 15px; margin: 10px 0; border-radius: 5px; }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .api-response {
+        background: #f0f0f0;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+        white-space: pre-wrap;
+      }
+      .book-display {
+        background: #e8f5e8;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Тест API ответа книги</h1>
-    
+
     <button onclick="testAPI(1)">Тест ID 1</button>
     <button onclick="testAPI(20)">Тест ID 20</button>
     <button onclick="testAPI(5)">Тест ID 5</button>
-    
-    <div class="api-response" id="api-response">Нажмите кнопку для тестирования...</div>
-    <div class="book-display" id="book-display" style="display: none;"></div>
-    
+
+    <div class="api-response" id="api-response">
+      Нажмите кнопку для тестирования...
+    </div>
+    <div class="book-display" id="book-display" style="display: none"></div>
+
     <script>
-        async function testAPI(bookId) {
-            const responseDiv = document.getElementById('api-response');
-            const displayDiv = document.getElementById('book-display');
-            
-            try {
-                responseDiv.textContent = `Загружаем книгу с ID ${bookId}...`;
-                
-                const response = await fetch(`/api/books/${bookId}`);
-                const data = await response.json();
-                
-                responseDiv.textContent = `API Response для ID ${bookId}:\n\n` + JSON.stringify(data, null, 2);
-                
-                // Обрабатываем данные как в нашем коде
-                let book = null;
-                if (data.success && data.data && data.data.book) {
-                    book = data.data.book;
-                } else if (data.success && data.data) {
-                    book = data.data;
-                } else if (data.id || data.title) {
-                    book = data;
-                } else {
-                    throw new Error('Некорректный формат данных');
-                }
-                
-                // Отображаем обработанные данные
-                displayDiv.style.display = 'block';
-                displayDiv.innerHTML = `
+      async function testAPI(bookId) {
+        const responseDiv = document.getElementById("api-response");
+        const displayDiv = document.getElementById("book-display");
+
+        try {
+          responseDiv.textContent = `Загружаем книгу с ID ${bookId}...`;
+
+          const response = await fetch(`/api/books/${bookId}`);
+          const data = await response.json();
+
+          responseDiv.textContent =
+            `API Response для ID ${bookId}:\n\n` +
+            JSON.stringify(data, null, 2);
+
+          // Обрабатываем данные как в нашем коде
+          let book = null;
+          if (data.success && data.data && data.data.book) {
+            book = data.data.book;
+          } else if (data.success && data.data) {
+            book = data.data;
+          } else if (data.id || data.title) {
+            book = data;
+          } else {
+            throw new Error("Некорректный формат данных");
+          }
+
+          // Отображаем обработанные данные
+          displayDiv.style.display = "block";
+          displayDiv.innerHTML = `
                     <h3>Обработанные данные книги:</h3>
                     <p><strong>ID:</strong> ${book.id}</p>
-                    <p><strong>Заголовок:</strong> ${book.title || 'Не указан'}</p>
+                    <p><strong>Заголовок:</strong> ${
+                      book.title || "Не указан"
+                    }</p>
                     <p><strong>Авторы:</strong> ${formatAuthors(book)}</p>
                     <p><strong>Категория:</strong> ${formatCategory(book)}</p>
-                    <p><strong>Издательство:</strong> ${formatPublisher(book)}</p>
-                    <p><strong>Цена:</strong> ${book.price || 'Не указана'}</p>
-                    <p><strong>Страниц:</strong> ${book.pages || 'Не указано'}</p>
-                    <p><strong>Год:</strong> ${book.publication_year || book.year || 'Не указан'}</p>
-                    <p><strong>ISBN:</strong> ${book.isbn || 'Не указан'}</p>
-                    <p><strong>Изображение:</strong> ${book.image_url || book.image || 'Не указано'}</p>
-                    <p><strong>Описание:</strong> ${book.description || book.fullDescription || book.shortDescription || 'Не указано'}</p>
+                    <p><strong>Издательство:</strong> ${formatPublisher(
+                      book
+                    )}</p>
+                    <p><strong>Цена:</strong> ${book.price || "Не указана"}</p>
+                    <p><strong>Страниц:</strong> ${
+                      book.pages || "Не указано"
+                    }</p>
+                    <p><strong>Год:</strong> ${
+                      book.publication_year || book.year || "Не указан"
+                    }</p>
+                    <p><strong>ISBN:</strong> ${book.isbn || "Не указан"}</p>
+                    <p><strong>Изображение:</strong> ${
+                      book.image_url || book.image || "Не указано"
+                    }</p>
+                    <p><strong>Описание:</strong> ${
+                      book.description ||
+                      book.fullDescription ||
+                      book.shortDescription ||
+                      "Не указано"
+                    }</p>
                 `;
-                
-            } catch (error) {
-                responseDiv.textContent = `Ошибка: ${error.message}`;
-                displayDiv.style.display = 'none';
-            }
+        } catch (error) {
+          responseDiv.textContent = `Ошибка: ${error.message}`;
+          displayDiv.style.display = "none";
         }
-        
-        function formatAuthors(book) {
-            if (book.authors && Array.isArray(book.authors) && book.authors.length > 0) {
-                return book.authors.map(author => {
-                    if (typeof author === 'string') return author;
-                    return author.name || `${author.first_name || ''} ${author.last_name || ''}`.trim() || 'Неизвестный автор';
-                }).join(', ');
-            } else if (book.Authors && Array.isArray(book.Authors) && book.Authors.length > 0) {
-                return book.Authors.map(author => {
-                    if (typeof author === 'string') return author;
-                    return author.name || `${author.first_name || ''} ${author.last_name || ''}`.trim() || 'Неизвестный автор';
-                }).join(', ');
-            } else if (book.author) {
-                return book.author;
-            }
-            return 'Автор не указан';
+      }
+
+      function formatAuthors(book) {
+        if (
+          book.authors &&
+          Array.isArray(book.authors) &&
+          book.authors.length > 0
+        ) {
+          return book.authors
+            .map((author) => {
+              if (typeof author === "string") return author;
+              return (
+                author.name ||
+                `${author.first_name || ""} ${author.last_name || ""}`.trim() ||
+                "Неизвестный автор"
+              );
+            })
+            .join(", ");
+        } else if (
+          book.Authors &&
+          Array.isArray(book.Authors) &&
+          book.Authors.length > 0
+        ) {
+          return book.Authors.map((author) => {
+            if (typeof author === "string") return author;
+            return (
+              author.name ||
+              `${author.first_name || ""} ${author.last_name || ""}`.trim() ||
+              "Неизвестный автор"
+            );
+          }).join(", ");
+        } else if (book.author) {
+          return book.author;
         }
-        
-        function formatCategory(book) {
-            if (book.category && book.category.name) {
-                return book.category.name;
-            } else if (book.Category && book.Category.name) {
-                return book.Category.name;
-            } else if (book.genre) {
-                return book.genre;
-            }
-            return 'Не указана';
+        return "Автор не указан";
+      }
+
+      function formatCategory(book) {
+        if (book.category && book.category.name) {
+          return book.category.name;
+        } else if (book.Category && book.Category.name) {
+          return book.Category.name;
+        } else if (book.genre) {
+          return book.genre;
         }
-        
-        function formatPublisher(book) {
-            if (book.publisher && book.publisher.name) {
-                return book.publisher.name;
-            } else if (book.Publisher && book.Publisher.name) {
-                return book.Publisher.name;
-            }
-            return 'Не указано';
+        return "Не указана";
+      }
+
+      function formatPublisher(book) {
+        if (book.publisher && book.publisher.name) {
+          return book.publisher.name;
+        } else if (book.Publisher && book.Publisher.name) {
+          return book.Publisher.name;
         }
+        return "Не указано";
+      }
     </script>
-</body>
+  </body>
 </html>

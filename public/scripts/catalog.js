@@ -451,7 +451,9 @@
    */
   function createBookCardHTML(book) {
     return `
-      <div class="book-card" onclick="window.location.href='book-detail.html?id=${book.id}'" style="cursor: pointer;">
+      <div class="book-card" onclick="window.location.href='book-detail.html?id=${
+        book.id
+      }'" style="cursor: pointer;">
         <img
           src="../img/${book.image || "placeholder.jpg"}"
           alt="${book.title}"
@@ -477,9 +479,9 @@
             }" class="btn btn-details" onclick="event.stopPropagation();">
               Подробнее
             </a>
-            <button class="btn btn-order" onclick="event.stopPropagation(); orderBook(${book.id}, '${
-      book.title
-    }')">
+            <button class="btn btn-order" onclick="event.stopPropagation(); orderBook(${
+              book.id
+            }, '${book.title}')">
               Заказать
             </button>
           </div>
@@ -706,7 +708,9 @@
     const html = state.books
       .map(
         (book) => `
-      <div class="book-card" onclick="window.location.href='book-detail.html?id=${book.id}'" style="cursor: pointer;">
+      <div class="book-card" onclick="window.location.href='book-detail.html?id=${
+        book.id
+      }'" style="cursor: pointer;">
         <img
           src="../img/${book.image || "placeholder.jpg"}"
           alt="${book.title}"
@@ -732,9 +736,9 @@
             }" class="btn btn-details" onclick="event.stopPropagation();">
               Подробнее
             </a>
-            <button class="btn btn-order" onclick="event.stopPropagation(); orderBook(${book.id}, '${
-          book.title
-        }')">
+            <button class="btn btn-order" onclick="event.stopPropagation(); orderBook(${
+              book.id
+            }, '${book.title}')">
               Заказать
             </button>
           </div>

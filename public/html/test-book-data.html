@@ -1,110 +1,159 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Тест загрузки данных книги</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .debug { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        .book-data { background: #e8f5e8; padding: 15px; margin: 10px 0; border-radius: 5px; }
-        .error { background: #f8d7da; padding: 15px; margin: 10px 0; border-radius: 5px; }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .debug {
+        background: #f0f0f0;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .book-data {
+        background: #e8f5e8;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+      .error {
+        background: #f8d7da;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Тест загрузки данных книги</h1>
-    
+
     <div class="debug" id="debug-info">Загрузка...</div>
-    <div class="book-data" id="book-data" style="display: none;"></div>
-    
+    <div class="book-data" id="book-data" style="display: none"></div>
+
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const bookId = urlParams.get('id') || 'book1';
-        
-        const debugInfo = document.getElementById('debug-info');
-        const bookData = document.getElementById('book-data');
-        
-        function log(message) {
-            console.log(message);
-            debugInfo.innerHTML += '<br>' + message;
-        }
-        
-        async function testDataLoading() {
-            log('=== Тест загрузки данных ===');
-            log('Book ID: ' + bookId);
-            log('Book ID type: ' + typeof bookId);
-            
-            try {
-                // Тест API
-                log('<br>--- Проверяем API ---');
-                try {
-                    const apiResponse = await fetch(`/api/books/${bookId}`);
-                    log('API Response status: ' + apiResponse.status);
-                    if (apiResponse.ok) {
-                        const apiBook = await apiResponse.json();
-                        log('API Book data received: ' + JSON.stringify(apiBook, null, 2));
-                        showBookData('API', apiBook);
-                        return;
-                    } else {
-                        const errorText = await apiResponse.text();
-                        log('API Error: ' + errorText);
-                    }
-                } catch (apiError) {
-                    log('API Exception: ' + apiError.message);
-                }
-                
-                // Тест JSON
-                log('<br>--- Проверяем JSON файл ---');
-                const jsonResponse = await fetch('../data/books.json');
-                log('JSON Response status: ' + jsonResponse.status);
-                
-                if (jsonResponse.ok) {
-                    const data = await jsonResponse.json();
-                    log('JSON loaded, total books: ' + data.books.length);
-                    
-                    log('Available book IDs: ' + data.books.map(b => b.id + ' (' + typeof b.id + ')').join(', '));
-                    
-                    const book = data.books.find(b => {
-                        const match = b.id === bookId || b.id === parseInt(bookId) || b.id.toString() === bookId;
-                        log(`Comparing book ${b.id} (${typeof b.id}) with ${bookId} (${typeof bookId}): ${match}`);
-                        return match;
-                    });
-                    
-                    if (book) {
-                        log('Book found in JSON: ' + JSON.stringify(book, null, 2));
-                        showBookData('JSON', book);
-                    } else {
-                        log('Book NOT found in JSON!');
-                        log('Searching again with debug...');
-                        data.books.forEach((b, index) => {
-                            log(`Book ${index}: ID=${b.id}, Type=${typeof b.id}, Title=${b.title}`);
-                        });
-                    }
-                } else {
-                    log('JSON loading failed');
-                }
-                
-            } catch (error) {
-                log('Error: ' + error.message);
+      const urlParams = new URLSearchParams(window.location.search);
+      const bookId = urlParams.get("id") || "book1";
+
+      const debugInfo = document.getElementById("debug-info");
+      const bookData = document.getElementById("book-data");
+
+      function log(message) {
+        console.log(message);
+        debugInfo.innerHTML += "<br>" + message;
+      }
+
+      async function testDataLoading() {
+        log("=== Тест загрузки данных ===");
+        log("Book ID: " + bookId);
+        log("Book ID type: " + typeof bookId);
+
+        try {
+          // Тест API
+          log("<br>--- Проверяем API ---");
+          try {
+            const apiResponse = await fetch(`/api/books/${bookId}`);
+            log("API Response status: " + apiResponse.status);
+            if (apiResponse.ok) {
+              const apiBook = await apiResponse.json();
+              log(
+                "API Book data received: " + JSON.stringify(apiBook, null, 2)
+              );
+              showBookData("API", apiBook);
+              return;
+            } else {
+              const errorText = await apiResponse.text();
+              log("API Error: " + errorText);
             }
+          } catch (apiError) {
+            log("API Exception: " + apiError.message);
+          }
+
+          // Тест JSON
+          log("<br>--- Проверяем JSON файл ---");
+          const jsonResponse = await fetch("../data/books.json");
+          log("JSON Response status: " + jsonResponse.status);
+
+          if (jsonResponse.ok) {
+            const data = await jsonResponse.json();
+            log("JSON loaded, total books: " + data.books.length);
+
+            log(
+              "Available book IDs: " +
+                data.books
+                  .map((b) => b.id + " (" + typeof b.id + ")")
+                  .join(", ")
+            );
+
+            const book = data.books.find((b) => {
+              const match =
+                b.id === bookId ||
+                b.id === parseInt(bookId) ||
+                b.id.toString() === bookId;
+              log(
+                `Comparing book ${
+                  b.id
+                } (${typeof b.id}) with ${bookId} (${typeof bookId}): ${match}`
+              );
+              return match;
+            });
+
+            if (book) {
+              log("Book found in JSON: " + JSON.stringify(book, null, 2));
+              showBookData("JSON", book);
+            } else {
+              log("Book NOT found in JSON!");
+              log("Searching again with debug...");
+              data.books.forEach((b, index) => {
+                log(
+                  `Book ${index}: ID=${b.id}, Type=${typeof b.id}, Title=${
+                    b.title
+                  }`
+                );
+              });
+            }
+          } else {
+            log("JSON loading failed");
+          }
+        } catch (error) {
+          log("Error: " + error.message);
         }
-        
-        function showBookData(source, book) {
-            bookData.style.display = 'block';
-            bookData.innerHTML = `
+      }
+
+      function showBookData(source, book) {
+        bookData.style.display = "block";
+        bookData.innerHTML = `
                 <h3>Данные книги из ${source}:</h3>
                 <p><strong>ID:</strong> ${book.id} (${typeof book.id})</p>
                 <p><strong>Title:</strong> ${book.title}</p>
-                <p><strong>Author:</strong> ${book.author || (book.Authors ? book.Authors.map(a => a.name).join(', ') : 'N/A')}</p>
-                <p><strong>Genre/Category:</strong> ${book.genre || book.category?.name || 'N/A'}</p>
+                <p><strong>Author:</strong> ${
+                  book.author ||
+                  (book.Authors
+                    ? book.Authors.map((a) => a.name).join(", ")
+                    : "N/A")
+                }</p>
+                <p><strong>Genre/Category:</strong> ${
+                  book.genre || book.category?.name || "N/A"
+                }</p>
                 <p><strong>Price:</strong> ${book.price}</p>
-                <p><strong>Image:</strong> ${book.image || book.image_url || 'N/A'}</p>
-                <p><strong>Description:</strong> ${book.fullDescription || book.description || book.shortDescription || 'N/A'}</p>
+                <p><strong>Image:</strong> ${
+                  book.image || book.image_url || "N/A"
+                }</p>
+                <p><strong>Description:</strong> ${
+                  book.fullDescription ||
+                  book.description ||
+                  book.shortDescription ||
+                  "N/A"
+                }</p>
             `;
-        }
-        
-        // Запускаем тест
-        testDataLoading();
+      }
+
+      // Запускаем тест
+      testDataLoading();
     </script>
-</body>
+  </body>
 </html>

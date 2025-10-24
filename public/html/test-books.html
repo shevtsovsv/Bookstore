@@ -1,56 +1,57 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Тест детальной страницы</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .test-link { 
-            display: block; 
-            margin: 10px 0; 
-            padding: 10px; 
-            background: #f0f0f0; 
-            text-decoration: none; 
-            color: #333; 
-            border-radius: 5px;
-        }
-        .test-link:hover { background: #e0e0e0; }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .test-link {
+        display: block;
+        margin: 10px 0;
+        padding: 10px;
+        background: #f0f0f0;
+        text-decoration: none;
+        color: #333;
+        border-radius: 5px;
+      }
+      .test-link:hover {
+        background: #e0e0e0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Тест ссылок на детальные страницы книг</h1>
-    
+
     <a href="book-detail.html?id=book1" class="test-link">
-        📚 Книга 1: Унесённые ветром
+      📚 Книга 1: Унесённые ветром
     </a>
-    
+
     <a href="book-detail.html?id=book2" class="test-link">
-        📚 Книга 2: Гроза
+      📚 Книга 2: Гроза
     </a>
-    
-    <a href="book-detail.html?id=book3" class="test-link">
-        📚 Книга 3: Тест
-    </a>
-    
-    <hr>
-    
-    <a href="book.html" class="test-link">
-        🔙 Вернуться к каталогу
-    </a>
-    
+
+    <a href="book-detail.html?id=book3" class="test-link"> 📚 Книга 3: Тест </a>
+
+    <hr />
+
+    <a href="book.html" class="test-link"> 🔙 Вернуться к каталогу </a>
+
     <script>
-        console.log('Test page loaded');
-        
-        // Проверяем, что JSON доступен
-        fetch('../data/books.json')
-            .then(response => response.json())
-            .then(data => {
-                console.log('JSON data available:', data);
-            })
-            .catch(error => {
-                console.error('JSON loading error:', error);
-            });
+      console.log("Test page loaded");
+
+      // Проверяем, что JSON доступен
+      fetch("../data/books.json")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("JSON data available:", data);
+        })
+        .catch((error) => {
+          console.error("JSON loading error:", error);
+        });
     </script>
-</body>
+  </body>
 </html>

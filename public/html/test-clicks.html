@@ -1,89 +1,104 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Тест кликов по карточкам</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .test-card { 
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin: 10px 0;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .test-card:hover { background: #f0f0f0; }
-        .test-button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        .test-button:hover { background: #0056b3; }
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .test-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+      .test-card:hover {
+        background: #f0f0f0;
+      }
+      .test-button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        margin: 5px;
+        cursor: pointer;
+        border-radius: 3px;
+      }
+      .test-button:hover {
+        background: #0056b3;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Тест кликов по карточкам книг</h1>
-    
+
     <div class="test-card" data-book-id="book1">
-        <h3>Тестовая книга 1</h3>
-        <p>Описание книги</p>
-        <div class="book-actions">
-            <button class="test-button btn-order" data-book-id="book1">Заказать</button>
-            <button class="test-button btn-details" data-book-id="book1">Подробнее</button>
-        </div>
+      <h3>Тестовая книга 1</h3>
+      <p>Описание книги</p>
+      <div class="book-actions">
+        <button class="test-button btn-order" data-book-id="book1">
+          Заказать
+        </button>
+        <button class="test-button btn-details" data-book-id="book1">
+          Подробнее
+        </button>
+      </div>
     </div>
-    
+
     <div class="test-card" data-book-id="book2">
-        <h3>Тестовая книга 2</h3>
-        <p>Описание книги</p>
-        <div class="book-actions">
-            <button class="test-button btn-order" data-book-id="book2">Заказать</button>
-            <button class="test-button btn-details" data-book-id="book2">Подробнее</button>
-        </div>
+      <h3>Тестовая книга 2</h3>
+      <p>Описание книги</p>
+      <div class="book-actions">
+        <button class="test-button btn-order" data-book-id="book2">
+          Заказать
+        </button>
+        <button class="test-button btn-details" data-book-id="book2">
+          Подробнее
+        </button>
+      </div>
     </div>
-    
-    <hr>
+
+    <hr />
     <a href="book.html">🔙 Вернуться к каталогу</a>
-    
+
     <script>
-        console.log('Test page loaded');
-        
-        // Тестируем обработчики
-        document.querySelectorAll('.btn-details').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const bookId = this.getAttribute('data-book-id');
-                console.log("🔍 Переход к деталям книги:", bookId);
-                alert(`Переход к книге ${bookId}`);
-                // window.location.href = `book-detail.html?id=${bookId}`;
-            });
+      console.log("Test page loaded");
+
+      // Тестируем обработчики
+      document.querySelectorAll(".btn-details").forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const bookId = this.getAttribute("data-book-id");
+          console.log("🔍 Переход к деталям книги:", bookId);
+          alert(`Переход к книге ${bookId}`);
+          // window.location.href = `book-detail.html?id=${bookId}`;
         });
-        
-        document.querySelectorAll('.btn-order').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const bookId = this.getAttribute('data-book-id');
-                console.log("🛒 Заказ книги:", bookId);
-                alert(`Заказ книги ${bookId}`);
-            });
+      });
+
+      document.querySelectorAll(".btn-order").forEach((button) => {
+        button.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const bookId = this.getAttribute("data-book-id");
+          console.log("🛒 Заказ книги:", bookId);
+          alert(`Заказ книги ${bookId}`);
         });
-        
-        document.querySelectorAll('.test-card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                if (!e.target.closest('.book-actions')) {
-                    const bookId = this.getAttribute('data-book-id');
-                    console.log("📚 Клик по карточке книги:", bookId);
-                    alert(`Клик по карточке ${bookId}`);
-                }
-            });
+      });
+
+      document.querySelectorAll(".test-card").forEach((card) => {
+        card.addEventListener("click", function (e) {
+          if (!e.target.closest(".book-actions")) {
+            const bookId = this.getAttribute("data-book-id");
+            console.log("📚 Клик по карточке книги:", bookId);
+            alert(`Клик по карточке ${bookId}`);
+          }
         });
+      });
     </script>
-</body>
+  </body>
 </html>

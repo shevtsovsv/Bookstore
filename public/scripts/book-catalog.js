@@ -106,20 +106,27 @@
       return data.books;
     } catch (error) {
       console.error("Ошибка загрузки данных из JSON:", error);
-      
+
       // Проверяем, является ли ошибка CORS
-      if (error.message.includes('Failed to fetch') || error.message.includes('TypeError')) {
-        console.warn("⚠️ CORS блокировка: Браузер блокирует загрузку локальных файлов.");
-        console.info("💡 Для полной функциональности используйте HTTP сервер (например, Live Server в VS Code)");
+      if (
+        error.message.includes("Failed to fetch") ||
+        error.message.includes("TypeError")
+      ) {
+        console.warn(
+          "⚠️ CORS блокировка: Браузер блокирует загрузку локальных файлов."
+        );
+        console.info(
+          "💡 Для полной функциональности используйте HTTP сервер (например, Live Server в VS Code)"
+        );
         console.info("📁 Пока используем встроенные данные...");
       }
-      
+
       // Проверяем, есть ли глобальные данные из book-data.js
       if (window.BOOKS_DATA && window.BOOKS_DATA.books) {
         console.log("✅ Используем данные из book-data.js");
         return window.BOOKS_DATA.books;
       }
-      
+
       console.log("📋 Используем статические fallback данные");
       return fallbackBooks;
     }
@@ -201,20 +208,20 @@
     const cardsHTML = books.map(generateBookCard).join("");
     console.log("🏗️ HTML сгенерирован, длина:", cardsHTML.length);
     console.log("📝 Первые 200 символов HTML:", cardsHTML.substring(0, 200));
-    
+
     container.innerHTML = cardsHTML;
     console.log("✅ HTML вставлен в контейнер");
-    
+
     // Проверяем, что карточки действительно появились
-    const addedCards = container.querySelectorAll('.book-card');
+    const addedCards = container.querySelectorAll(".book-card");
     console.log("🎯 Найдено карточек в DOM:", addedCards.length);
-    
+
     // Принудительно устанавливаем display: flex для всех карточек
-    addedCards.forEach(function(card) {
-      card.style.setProperty('display', 'flex', 'important');
+    addedCards.forEach(function (card) {
+      card.style.setProperty("display", "flex", "important");
     });
     console.log("🎨 Стили применены принудительно");
-    
+
     // Добавляем обработчики событий
     setupCardEventListeners();
   }
@@ -222,59 +229,59 @@
   // Настройка обработчиков событий для карточек
   function setupCardEventListeners() {
     console.log("🎯 Настраиваем обработчики событий...");
-    
+
     // Проверяем, сколько элементов найдено
-    const detailButtons = document.querySelectorAll('.btn-details');
-    const orderButtons = document.querySelectorAll('.btn-order');
-    const bookCards = document.querySelectorAll('.book-card');
-    
+    const detailButtons = document.querySelectorAll(".btn-details");
+    const orderButtons = document.querySelectorAll(".btn-order");
+    const bookCards = document.querySelectorAll(".book-card");
+
     console.log("Найдено кнопок 'Подробнее':", detailButtons.length);
     console.log("Найдено кнопок 'Заказать':", orderButtons.length);
     console.log("Найдено карточек книг:", bookCards.length);
-    
+
     // Обработчики для кнопок "Подробнее"
     detailButtons.forEach((button, index) => {
       console.log(`Настраиваем кнопку "Подробнее" #${index}`, button);
-      button.addEventListener('click', function(e) {
+      button.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        const bookId = this.getAttribute('data-book-id');
+        const bookId = this.getAttribute("data-book-id");
         console.log("🔍 Переход к деталям книги:", bookId);
         window.location.href = `book-detail.html?id=${bookId}`;
       });
     });
-    
+
     // Обработчики для кнопок "Заказать"
     orderButtons.forEach((button, index) => {
       console.log(`Настраиваем кнопку "Заказать" #${index}`, button);
-      button.addEventListener('click', function(e) {
+      button.addEventListener("click", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        const bookId = this.getAttribute('data-book-id');
+        const bookId = this.getAttribute("data-book-id");
         console.log("🛒 Заказ книги:", bookId);
         orderBook(bookId);
       });
     });
-    
+
     // Обработчики для кликов по карточкам
     bookCards.forEach((card, index) => {
       console.log(`Настраиваем карточку #${index}`, card);
-      card.addEventListener('click', function(e) {
+      card.addEventListener("click", function (e) {
         console.log("Клик по карточке, target:", e.target);
         // Проверяем, что клик не по кнопке
-        if (!e.target.closest('.book-actions')) {
-          const bookId = this.getAttribute('data-book-id');
+        if (!e.target.closest(".book-actions")) {
+          const bookId = this.getAttribute("data-book-id");
           console.log("📚 Клик по карточке книги:", bookId);
           window.location.href = `book-detail.html?id=${bookId}`;
         } else {
           console.log("Клик по кнопке, игнорируем");
         }
       });
-      
+
       // Добавляем курсор pointer
-      card.style.cursor = 'pointer';
+      card.style.cursor = "pointer";
     });
-    
+
     console.log("✅ Обработчики событий настроены");
   }
 

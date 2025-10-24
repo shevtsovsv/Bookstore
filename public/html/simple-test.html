@@ -1,80 +1,80 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Простой тест каталога</title>
-    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/style.css" />
     <style>
-        .debug-info {
-            background: #f0f0f0;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-family: monospace;
-        }
+      .debug-info {
+        background: #f0f0f0;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 5px;
+        font-family: monospace;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Простой тест каталога книг</h1>
-    
+
     <div class="debug-info">
-        <h3>Отладочная информация:</h3>
-        <div id="debug-output">Загрузка...</div>
+      <h3>Отладочная информация:</h3>
+      <div id="debug-output">Загрузка...</div>
     </div>
-    
+
     <div id="books-container"></div>
-    
+
     <script>
-        let debugOutput = document.getElementById('debug-output');
-        
-        function log(message) {
-            console.log(message);
-            debugOutput.innerHTML += '<br>' + message;
-        }
-        
-        log('Начинаем загрузку...');
-        
-        fetch('../data/books.json')
-            .then(response => {
-                log('Response status: ' + response.status);
-                return response.json();
-            })
-            .then(data => {
-                log('Данные загружены: ' + data.books.length + ' книг');
-                
-                const container = document.getElementById('books-container');
-                
-                data.books.slice(0, 3).forEach((book, index) => {
-                    const card = document.createElement('div');
-                    card.className = 'book-card';
-                    card.innerHTML = `
+      let debugOutput = document.getElementById("debug-output");
+
+      function log(message) {
+        console.log(message);
+        debugOutput.innerHTML += "<br>" + message;
+      }
+
+      log("Начинаем загрузку...");
+
+      fetch("../data/books.json")
+        .then((response) => {
+          log("Response status: " + response.status);
+          return response.json();
+        })
+        .then((data) => {
+          log("Данные загружены: " + data.books.length + " книг");
+
+          const container = document.getElementById("books-container");
+
+          data.books.slice(0, 3).forEach((book, index) => {
+            const card = document.createElement("div");
+            card.className = "book-card";
+            card.innerHTML = `
                         <h3>${book.title}</h3>
                         <p>Автор: ${book.author}</p>
                         <p>Цена: ${book.price} руб.</p>
                         <button onclick="goToDetails('${book.id}')">Подробнее</button>
                     `;
-                    
-                    // Добавляем клик по карточке
-                    card.addEventListener('click', function(e) {
-                        if (e.target.tagName !== 'BUTTON') {
-                            log('Клик по карточке: ' + book.id);
-                            goToDetails(book.id);
-                        }
-                    });
-                    
-                    container.appendChild(card);
-                    log('Карточка добавлена: ' + book.title);
-                });
-            })
-            .catch(error => {
-                log('Ошибка: ' + error.message);
+
+            // Добавляем клик по карточке
+            card.addEventListener("click", function (e) {
+              if (e.target.tagName !== "BUTTON") {
+                log("Клик по карточке: " + book.id);
+                goToDetails(book.id);
+              }
             });
-        
-        function goToDetails(bookId) {
-            log('Переход к книге: ' + bookId);
-            window.location.href = `book-detail.html?id=${bookId}`;
-        }
+
+            container.appendChild(card);
+            log("Карточка добавлена: " + book.title);
+          });
+        })
+        .catch((error) => {
+          log("Ошибка: " + error.message);
+        });
+
+      function goToDetails(bookId) {
+        log("Переход к книге: " + bookId);
+        window.location.href = `book-detail.html?id=${bookId}`;
+      }
     </script>
-</body>
+  </body>
 </html>
