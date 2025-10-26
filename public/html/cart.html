@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Корзина - Книжный магазин</title>
+    <link rel="stylesheet" href="../style/style.css" />
+  </head>
+  <body>
+    <header>
+      <img
+        src="../img/logo.png"
+        alt="Логотип магазина"
+        class="logo"
+        width="140"
+        height="70"
+      />
+      <nav>
+        <ul class="menu">
+          <li><a href="../index.html">Главная</a></li>
+          <li><a href="book.html">Каталог</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="register.html">Регистрация</a></li>
+          <li><a href="login.html">Вход</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Корзина</h1>
+
+      <div id="cart-content">
+        <div class="loading">
+          <p>Загрузка корзины...</p>
+        </div>
+      </div>
+
+      <div id="empty-cart" style="display: none">
+        <div class="empty-state">
+          <h2>Ваша корзина пуста</h2>
+          <p>Добавьте книги из каталога, чтобы они появились здесь</p>
+          <a href="book.html" class="btn btn-primary">Перейти к каталогу</a>
+        </div>
+      </div>
+
+      <div id="cart-items" style="display: none">
+        <div class="cart-list"></div>
+
+        <div class="cart-summary">
+          <div class="summary-row">
+            <span>Товаров:</span>
+            <span id="total-items">0</span>
+          </div>
+          <div class="summary-row">
+            <span>Общая сумма:</span>
+            <span id="total-amount">0 ₽</span>
+          </div>
+          <div class="cart-actions">
+            <button class="btn btn-secondary" onclick="clearCart()">
+              Очистить корзину
+            </button>
+            <button class="btn btn-primary" onclick="checkout()">
+              Оформить заказ
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="../scripts/auth-utils.js"></script>
+    <script src="../scripts/cart.js"></script>
+  </body>
+</html>

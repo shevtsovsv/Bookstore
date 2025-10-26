@@ -16,12 +16,19 @@
         height="70"
       />
       <nav>
-        <ul class="menu">
+        <ul class="menu" id="main-menu">
           <li><a href="../index.html">Главная</a></li>
           <li><a href="book.html">Каталог</a></li>
           <li><a href="contacts.html" class="active">Контакты</a></li>
-          <li><a href="register.html">Регистрация</a></li>
-          <li><a href="login.html">Вход</a></li>
+          <li><a href="register.html" id="register-link">Регистрация</a></li>
+          <li><a href="login.html" id="login-link">Вход</a></li>
+          <!-- Будет заменено на имя пользователя и выход при авторизации -->
+          <li>
+            <a href="cart.html" class="cart-icon" id="cart-link">
+              <span class="cart-icon-text">Корзина</span>
+              <span class="cart-count hidden" id="cart-count">0</span>
+            </a>
+          </li>
         </ul>
       </nav>
     </header>
@@ -37,5 +44,6 @@
       </p>
       <p><strong>Слоган:</strong> «Книга — лучший подарок!»</p>
     </main>
+    <script src="../scripts/auth-utils.js"></script>
   </body>
 </html>

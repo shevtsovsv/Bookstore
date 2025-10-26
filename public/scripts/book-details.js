@@ -502,30 +502,50 @@ async function addToCart() {
   }
 
   try {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    // Проверяем авторизацию через утилиты
+    if (!Auth.isAuthenticated()) {
       showError("Для добавления в корзину необходимо войти в систему");
       return;
     }
 
-    const response = await fetch("/api/cart/add", {
+    // Получаем токен через утилиты
+    const token = AuthToken.get();
+    if (!token) {
+      showError(
+        "Ошибка токена авторизации. Пожалуйста, войдите в систему снова"
+      );
+      return;
+    }
+
+    console.log("Adding to cart - Book ID:", currentBook.id);
+    console.log("Token exists:", !!token);
+
+    const response = await fetch("/api/cart", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        book_id: currentBook.id,
+        bookId: currentBook.id,
         quantity: 1,
       }),
     });
 
+    console.log("Cart API response status:", response.status);
     const result = await response.json();
+    console.log("Cart API response:", result);
 
     if (response.ok) {
       showSuccess("Книга добавлена в корзину!");
     } else {
-      throw new Error(result.message || "Ошибка добавления в корзину");
+      // Проверяем, не истек ли токен
+      if (response.status === 401) {
+        Auth.logout();
+        showError("Сессия истекла. Пожалуйста, войдите в систему снова");
+      } else {
+        throw new Error(result.message || "Ошибка добавления в корзину");
+      }
     }
   } catch (error) {
     console.error("Ошибка добавления в корзину:", error);

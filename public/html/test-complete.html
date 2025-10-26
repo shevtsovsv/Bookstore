@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тест полной функциональности</title>
+    <link rel="stylesheet" href="../style/style.css" />
+    <style>
+      .test-section {
+        background: white;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      .test-section h2 {
+        color: #27ae60;
+        margin-top: 0;
+      }
+      .test-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .test-btn {
+        padding: 10px 15px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .test-btn:hover {
+        background: #2980b9;
+      }
+      .test-result {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 12px;
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .info {
+        background: #cce7ff;
+        color: #004085;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img
+        src="../img/logo.png"
+        alt="Логотип магазина"
+        class="logo"
+        width="140"
+        height="70"
+      />
+      <nav>
+        <ul class="menu" id="main-menu">
+          <li><a href="../index.html">Главная</a></li>
+          <li><a href="book.html">Каталог</a></li>
+          <li><a href="contacts.html">Контакты</a></li>
+          <li><a href="register.html" id="register-link">Регистрация</a></li>
+          <li><a href="login.html" id="login-link">Вход</a></li>
+          <!-- Будет заменено на имя пользователя и выход при авторизации -->
+          <li>
+            <a href="cart.html" class="cart-icon" id="cart-link">
+              <span class="cart-icon-text">Корзина</span>
+              <span class="cart-count hidden" id="cart-count">0</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>🧪 Тест полной функциональности системы</h1>
+
+      <!-- Тест аутентификации -->
+      <div class="test-section">
+        <h2>🔐 Тест системы аутентификации</h2>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="testAuthStatus()">
+            Проверить статус авторизации
+          </button>
+          <button class="test-btn" onclick="testTokenValidation()">
+            Проверить токен
+          </button>
+          <button class="test-btn" onclick="testNavigationUpdate()">
+            Обновить навигацию
+          </button>
+          <button class="test-btn" onclick="simulateLogout()">
+            Симуляция выхода
+          </button>
+        </div>
+        <div id="auth-test-result" class="test-result"></div>
+      </div>
+
+      <!-- Тест корзины -->
+      <div class="test-section">
+        <h2>🛒 Тест функций корзины</h2>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="testCartAPI()">API корзины</button>
+          <button class="test-btn" onclick="testAddToCart()">
+            Добавить книгу
+          </button>
+          <button class="test-btn" onclick="testCartIcon()">
+            Иконка корзины
+          </button>
+          <button class="test-btn" onclick="testCartCount()">
+            Счетчик корзины
+          </button>
+        </div>
+        <div id="cart-test-result" class="test-result"></div>
+      </div>
+
+      <!-- Тест API -->
+      <div class="test-section">
+        <h2>🌐 Тест API подключения</h2>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="testBooksAPI()">
+            Загрузка книг
+          </button>
+          <button class="test-btn" onclick="testCategoriesAPI()">
+            Категории
+          </button>
+          <button class="test-btn" onclick="testAuthAPI()">
+            Аутентификация API
+          </button>
+          <button class="test-btn" onclick="testServerStatus()">
+            Статус сервера
+          </button>
+        </div>
+        <div id="api-test-result" class="test-result"></div>
+      </div>
+
+      <!-- Тест интерфейса -->
+      <div class="test-section">
+        <h2>🎨 Тест интерфейса</h2>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="testResponsiveness()">
+            Адаптивность
+          </button>
+          <button class="test-btn" onclick="testStyles()">CSS стили</button>
+          <button class="test-btn" onclick="testModalWindows()">
+            Модальные окна
+          </button>
+          <button class="test-btn" onclick="testNotifications()">
+            Уведомления
+          </button>
+        </div>
+        <div id="ui-test-result" class="test-result"></div>
+      </div>
+
+      <!-- Общая информация -->
+      <div class="test-section">
+        <h2>ℹ️ Информация о системе</h2>
+        <div class="test-buttons">
+          <button class="test-btn" onclick="showSystemInfo()">
+            Системная информация
+          </button>
+          <button class="test-btn" onclick="showLocalStorageInfo()">
+            LocalStorage
+          </button>
+          <button class="test-btn" onclick="showEnvironmentInfo()">
+            Окружение
+          </button>
+          <button class="test-btn" onclick="clearAllData()">
+            Очистить данные
+          </button>
+        </div>
+        <div id="info-result" class="test-result"></div>
+      </div>
+    </main>
+
+    <script src="../scripts/auth-utils.js"></script>
+    <script>
+      // Функции тестирования аутентификации
+      function testAuthStatus() {
+        const result = document.getElementById("auth-test-result");
+        try {
+          const isAuth = Auth.isAuthenticated();
+          const user = Auth.getCurrentUser();
+          const token = AuthToken.get();
+
+          result.innerHTML = `
+Статус авторизации: ${isAuth ? "✅ Авторизован" : "❌ Не авторизован"}
+Пользователь: ${user ? JSON.stringify(user, null, 2) : "Нет данных"}
+Токен: ${token ? "✅ Присутствует" : "❌ Отсутствует"}
+Длина токена: ${token ? token.length : 0}
+                `;
+          result.className = "test-result " + (isAuth ? "success" : "info");
+        } catch (error) {
+          result.innerHTML = `Ошибка: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      function testTokenValidation() {
+        const result = document.getElementById("auth-test-result");
+        try {
+          const token = AuthToken.get();
+          if (!token) {
+            result.innerHTML = "Токен отсутствует";
+            result.className = "test-result info";
+            return;
+          }
+
+          const payload = AuthToken.decode(token);
+          result.innerHTML = `
+Декодированный токен:
+${JSON.stringify(payload, null, 2)}
+
+Срок действия: ${
+            payload.exp
+              ? new Date(payload.exp * 1000).toLocaleString()
+              : "Не указан"
+          }
+Действителен: ${AuthToken.isValid(token) ? "✅ Да" : "❌ Нет"}
+                `;
+          result.className = "test-result success";
+        } catch (error) {
+          result.innerHTML = `Ошибка валидации токена: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      function testNavigationUpdate() {
+        const result = document.getElementById("auth-test-result");
+        try {
+          Auth.updateNavigation();
+          result.innerHTML = "Навигация обновлена ✅";
+          result.className = "test-result success";
+        } catch (error) {
+          result.innerHTML = `Ошибка обновления навигации: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      function simulateLogout() {
+        const result = document.getElementById("auth-test-result");
+        try {
+          Auth.logout();
+          result.innerHTML =
+            "Выход выполнен ✅\nНавигация обновлена\nДанные очищены";
+          result.className = "test-result success";
+        } catch (error) {
+          result.innerHTML = `Ошибка при выходе: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      // Функции тестирования корзины
+      async function testCartAPI() {
+        const result = document.getElementById("cart-test-result");
+        try {
+          const token = AuthToken.get();
+          if (!token) {
+            result.innerHTML = "Требуется авторизация для тестирования корзины";
+            result.className = "test-result info";
+            return;
+          }
+
+          const response = await fetch("/api/cart", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            const cartData = await response.json();
+            result.innerHTML = `
+API корзины доступно ✅
+Количество товаров: ${cartData.items ? cartData.items.length : 0}
+Данные корзины:
+${JSON.stringify(cartData, null, 2)}
+                    `;
+            result.className = "test-result success";
+          } else {
+            result.innerHTML = `Ошибка API: ${response.status} ${response.statusText}`;
+            result.className = "test-result error";
+          }
+        } catch (error) {
+          result.innerHTML = `Ошибка подключения к API корзины: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      async function testAddToCart() {
+        const result = document.getElementById("cart-test-result");
+        try {
+          if (!Auth.isAuthenticated()) {
+            result.innerHTML = "Требуется авторизация для добавления в корзину";
+            result.className = "test-result info";
+            return;
+          }
+
+          const response = await fetch("/api/cart", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${AuthToken.get()}`,
+            },
+            body: JSON.stringify({
+              bookId: 1,
+              quantity: 1,
+            }),
+          });
+
+          if (response.ok) {
+            result.innerHTML = "Тестовая книга добавлена в корзину ✅";
+            result.className = "test-result success";
+            Auth.updateCartCount(); // Обновляем счетчик
+          } else {
+            const errorData = await response.json();
+            result.innerHTML = `Ошибка добавления: ${
+              errorData.message || response.statusText
+            }`;
+            result.className = "test-result error";
+          }
+        } catch (error) {
+          result.innerHTML = `Ошибка: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      function testCartIcon() {
+        const result = document.getElementById("cart-test-result");
+        try {
+          Auth.updateCartIcon();
+          const cartIcon = document.getElementById("cart-link");
+          const cartCount = document.getElementById("cart-count");
+
+          result.innerHTML = `
+Иконка корзины обновлена ✅
+Элемент найден: ${cartIcon ? "✅" : "❌"}
+Счетчик найден: ${cartCount ? "✅" : "❌"}
+Класс счетчика: ${cartCount ? cartCount.className : "Элемент не найден"}
+                `;
+          result.className = "test-result success";
+        } catch (error) {
+          result.innerHTML = `Ошибка обновления иконки: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      async function testCartCount() {
+        const result = document.getElementById("cart-test-result");
+        try {
+          await Auth.updateCartCount();
+          const cartCount = document.getElementById("cart-count");
+
+          result.innerHTML = `
+Счетчик корзины обновлен ✅
+Текущее значение: ${cartCount ? cartCount.textContent : "Элемент не найден"}
+Видимость: ${
+            cartCount && !cartCount.classList.contains("hidden")
+              ? "Видимый"
+              : "Скрытый"
+          }
+                `;
+          result.className = "test-result success";
+        } catch (error) {
+          result.innerHTML = `Ошибка обновления счетчика: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      // Функции тестирования API
+      async function testBooksAPI() {
+        const result = document.getElementById("api-test-result");
+        try {
+          const response = await fetch("/api/books?limit=5");
+          if (response.ok) {
+            const data = await response.json();
+            result.innerHTML = `
+API книг работает ✅
+Получено книг: ${data.books ? data.books.length : 0}
+Общее количество: ${data.total || "Не указано"}
+                    `;
+            result.className = "test-result success";
+          } else {
+            result.innerHTML = `Ошибка API книг: ${response.status} ${response.statusText}`;
+            result.className = "test-result error";
+          }
+        } catch (error) {
+          result.innerHTML = `Ошибка подключения к API книг: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      async function testCategoriesAPI() {
+        const result = document.getElementById("api-test-result");
+        try {
+          const response = await fetch("/api/categories");
+          if (response.ok) {
+            const categories = await response.json();
+            result.innerHTML = `
+API категорий работает ✅
+Получено категорий: ${categories.length}
+Категории: ${categories.map((c) => c.name).join(", ")}
+                    `;
+            result.className = "test-result success";
+          } else {
+            result.innerHTML = `Ошибка API категорий: ${response.status} ${response.statusText}`;
+            result.className = "test-result error";
+          }
+        } catch (error) {
+          result.innerHTML = `Ошибка подключения к API категорий: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      async function testAuthAPI() {
+        const result = document.getElementById("api-test-result");
+        try {
+          const response = await fetch("/api/auth/verify", {
+            headers: {
+              Authorization: `Bearer ${AuthToken.get() || "invalid-token"}`,
+            },
+          });
+
+          result.innerHTML = `
+API аутентификации отвечает ✅
+Статус: ${response.status}
+Авторизация: ${response.ok ? "Валидна" : "Невалидна"}
+                `;
+          result.className =
+            "test-result " + (response.ok ? "success" : "info");
+        } catch (error) {
+          result.innerHTML = `Ошибка подключения к API аутентификации: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      async function testServerStatus() {
+        const result = document.getElementById("api-test-result");
+        try {
+          const startTime = Date.now();
+          const response = await fetch("/api/books?limit=1");
+          const endTime = Date.now();
+
+          result.innerHTML = `
+Сервер доступен ✅
+Время ответа: ${endTime - startTime}мс
+Статус: ${response.status}
+                `;
+          result.className = "test-result success";
+        } catch (error) {
+          result.innerHTML = `Сервер недоступен ❌\nОшибка: ${error.message}`;
+          result.className = "test-result error";
+        }
+      }
+
+      // Функции тестирования интерфейса
+      function testResponsiveness() {
+        const result = document.getElementById("ui-test-result");
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        let deviceType = "Desktop";
+        if (width <= 480) deviceType = "Mobile";
+        else if (width <= 768) deviceType = "Tablet";
+
+        result.innerHTML = `
+Размер окна: ${width}x${height}
+Тип устройства: ${deviceType}
+Viewport meta: ${document.querySelector('meta[name="viewport"]') ? "✅" : "❌"}
+CSS Grid поддержка: ${CSS.supports("display", "grid") ? "✅" : "❌"}
+CSS Flexbox поддержка: ${CSS.supports("display", "flex") ? "✅" : "❌"}
+            `;
+        result.className = "test-result success";
+      }
+
+      function testStyles() {
+        const result = document.getElementById("ui-test-result");
+        const stylesheets = Array.from(document.styleSheets);
+        const cartIcon = document.querySelector(".cart-icon");
+
+        result.innerHTML = `
+Загружено стилей: ${stylesheets.length}
+Иконка корзины: ${cartIcon ? "✅ Найдена" : "❌ Не найдена"}
+Стили корзины: ${getComputedStyle(cartIcon || document.body).getPropertyValue(
+          "background-color"
+        )}
+            `;
+        result.className = "test-result success";
+      }
+
+      function testModalWindows() {
+        const result = document.getElementById("ui-test-result");
+        result.innerHTML = "Функция в разработке...";
+        result.className = "test-result info";
+      }
+
+      function testNotifications() {
+        const result = document.getElementById("ui-test-result");
+
+        // Создаем тестовое уведомление
+        const notification = document.createElement("div");
+        notification.className = "notification success show";
+        notification.textContent = "Тестовое уведомление ✅";
+        notification.style.position = "fixed";
+        notification.style.top = "20px";
+        notification.style.right = "20px";
+        notification.style.zIndex = "1000";
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 3000);
+
+        result.innerHTML =
+          "Тестовое уведомление показано ✅\nБудет удалено через 3 секунды";
+        result.className = "test-result success";
+      }
+
+      // Информационные функции
+      function showSystemInfo() {
+        const result = document.getElementById("info-result");
+        result.innerHTML = `
+Браузер: ${navigator.userAgent}
+Язык: ${navigator.language}
+Платформа: ${navigator.platform}
+Cookies включены: ${navigator.cookieEnabled ? "✅" : "❌"}
+Online: ${navigator.onLine ? "✅" : "❌"}
+LocalStorage поддержка: ${typeof Storage !== "undefined" ? "✅" : "❌"}
+            `;
+        result.className = "test-result info";
+      }
+
+      function showLocalStorageInfo() {
+        const result = document.getElementById("info-result");
+        const items = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          const value = localStorage.getItem(key);
+          items.push(
+            `${key}: ${value.substring(0, 100)}${
+              value.length > 100 ? "..." : ""
+            }`
+          );
+        }
+
+        result.innerHTML = `
+Элементов в LocalStorage: ${localStorage.length}
+Данные:
+${items.join("\n")}
+            `;
+        result.className = "test-result info";
+      }
+
+      function showEnvironmentInfo() {
+        const result = document.getElementById("info-result");
+        result.innerHTML = `
+URL: ${window.location.href}
+Protocol: ${window.location.protocol}
+Host: ${window.location.host}
+Pathname: ${window.location.pathname}
+Auth утилиты загружены: ${typeof Auth !== "undefined" ? "✅" : "❌"}
+AuthToken утилиты загружены: ${typeof AuthToken !== "undefined" ? "✅" : "❌"}
+            `;
+        result.className = "test-result info";
+      }
+
+      function clearAllData() {
+        const result = document.getElementById("info-result");
+        localStorage.clear();
+        sessionStorage.clear();
+        result.innerHTML =
+          "Все данные очищены ✅\nLocalStorage и SessionStorage очищены";
+        result.className = "test-result success";
+
+        // Обновляем навигацию после очистки
+        setTimeout(() => {
+          Auth.updateNavigation();
+        }, 500);
+      }
+
+      // Инициализация при загрузке страницы
+      document.addEventListener("DOMContentLoaded", function () {
+        // Автоматически обновляем навигацию
+        if (typeof Auth !== "undefined") {
+          Auth.updateNavigation();
+          Auth.updateCartIcon();
+          Auth.updateCartCount();
+        }
+
+        console.log("🧪 Страница тестирования загружена");
+        console.log("Доступные тесты:", {
+          auth: typeof Auth !== "undefined",
+          authToken: typeof AuthToken !== "undefined",
+        });
+      });
+    </script>
+  </body>
+</html>

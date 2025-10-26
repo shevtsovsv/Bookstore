@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тест авторизации и корзины</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      .test-section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+      .info {
+        color: blue;
+      }
+      button {
+        margin: 5px;
+        padding: 10px 15px;
+      }
+      .auth-status {
+        background: #f0f0f0;
+        padding: 10px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Тест авторизации и корзины</h1>
+
+    <div class="test-section">
+      <h3>Статус авторизации</h3>
+      <div id="auth-status" class="auth-status">Проверяем...</div>
+      <button onclick="checkAuth()">Проверить авторизацию</button>
+      <button onclick="logout()">Выйти</button>
+    </div>
+
+    <div class="test-section">
+      <h3>Тест токена</h3>
+      <div id="token-info"></div>
+      <button onclick="showToken()">Показать токен</button>
+    </div>
+
+    <div class="test-section">
+      <h3>Тест API корзины</h3>
+      <div id="cart-status"></div>
+      <button onclick="testCartAPI()">Получить корзину</button>
+      <button onclick="testAddToCart()">Добавить книгу (ID: 1)</button>
+    </div>
+
+    <div class="test-section">
+      <h3>Логи</h3>
+      <div
+        id="logs"
+        style="
+          max-height: 200px;
+          overflow-y: auto;
+          background: #f9f9f9;
+          padding: 10px;
+        "
+      ></div>
+      <button onclick="clearLogs()">Очистить логи</button>
+    </div>
+
+    <script src="../scripts/auth-utils.js"></script>
+    <script>
+      function log(message, type = "info") {
+        const logs = document.getElementById("logs");
+        const time = new Date().toLocaleTimeString();
+        logs.innerHTML += `<div class="${type}">[${time}] ${message}</div>`;
+        logs.scrollTop = logs.scrollHeight;
+        console.log(`[${type}] ${message}`);
+      }
+
+      function clearLogs() {
+        document.getElementById("logs").innerHTML = "";
+      }
+
+      function checkAuth() {
+        const isAuth = Auth.isAuthenticated();
+        const user = Auth.getCurrentUser();
+        const token = AuthToken.get();
+
+        const status = document.getElementById("auth-status");
+        if (isAuth && user) {
+          status.innerHTML = `
+                    <div class="success">✅ Пользователь авторизован</div>
+                    <div>Email: ${user.email}</div>
+                    <div>Имя: ${user.firstName} ${user.lastName}</div>
+                    <div>Токен: ${token ? "✅ Есть" : "❌ Отсутствует"}</div>
+                `;
+          log("Пользователь авторизован: " + user.email, "success");
+        } else {
+          status.innerHTML =
+            '<div class="error">❌ Пользователь не авторизован</div>';
+          log("Пользователь не авторизован", "error");
+        }
+      }
+
+      function logout() {
+        Auth.logout();
+        log("Выполнен выход из системы", "info");
+        checkAuth();
+      }
+
+      function showToken() {
+        const token = AuthToken.get();
+        const tokenInfo = document.getElementById("token-info");
+
+        if (token) {
+          // Попробуем декодировать JWT (базовая проверка)
+          try {
+            const payload = JSON.parse(atob(token.split(".")[1]));
+            tokenInfo.innerHTML = `
+                        <div class="success">Токен найден</div>
+                        <div>Длина: ${token.length} символов</div>
+                        <div>Payload: ${JSON.stringify(payload, null, 2)}</div>
+                        <div>Начало: ${token.substring(0, 20)}...</div>
+                    `;
+            log("Токен декодирован успешно", "success");
+          } catch (e) {
+            tokenInfo.innerHTML = `
+                        <div class="error">Токен поврежден</div>
+                        <div>Ошибка: ${e.message}</div>
+                        <div>Токен: ${token.substring(0, 50)}...</div>
+                    `;
+            log("Ошибка декодирования токена: " + e.message, "error");
+          }
+        } else {
+          tokenInfo.innerHTML = '<div class="error">Токен отсутствует</div>';
+          log("Токен отсутствует", "error");
+        }
+      }
+
+      async function testCartAPI() {
+        const cartStatus = document.getElementById("cart-status");
+        const token = AuthToken.get();
+
+        if (!token) {
+          cartStatus.innerHTML =
+            '<div class="error">Токен отсутствует - авторизуйтесь</div>';
+          log("Попытка доступа к корзине без токена", "error");
+          return;
+        }
+
+        try {
+          log("Отправляем запрос к API корзины...", "info");
+
+          const response = await fetch("/api/cart", {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+          });
+
+          log(
+            `Ответ API корзины: ${response.status} ${response.statusText}`,
+            "info"
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            cartStatus.innerHTML = `
+                        <div class="success">✅ API корзины работает</div>
+                        <div>Товаров в корзине: ${data.data.summary.totalItems}</div>
+                        <div>Общая сумма: ${data.data.summary.totalAmount} ₽</div>
+                    `;
+            log("API корзины работает корректно", "success");
+          } else {
+            cartStatus.innerHTML = `
+                        <div class="error">❌ Ошибка API корзины</div>
+                        <div>Статус: ${response.status}</div>
+                        <div>Сообщение: ${data.message}</div>
+                    `;
+            log(
+              `Ошибка API корзины: ${response.status} - ${data.message}`,
+              "error"
+            );
+          }
+        } catch (error) {
+          cartStatus.innerHTML = `
+                    <div class="error">❌ Ошибка подключения</div>
+                    <div>${error.message}</div>
+                `;
+          log("Ошибка подключения к API корзины: " + error.message, "error");
+        }
+      }
+
+      async function testAddToCart() {
+        const token = AuthToken.get();
+
+        if (!token) {
+          log("Попытка добавления в корзину без токена", "error");
+          return;
+        }
+
+        try {
+          log("Добавляем книгу с ID 1 в корзину...", "info");
+
+          const response = await fetch("/api/cart", {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              bookId: 1,
+              quantity: 1,
+            }),
+          });
+
+          log(
+            `Ответ добавления в корзину: ${response.status} ${response.statusText}`,
+            "info"
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            log("✅ Книга успешно добавлена в корзину", "success");
+            // Обновляем статус корзины
+            testCartAPI();
+          } else {
+            log(
+              `❌ Ошибка добавления в корзину: ${response.status} - ${data.message}`,
+              "error"
+            );
+          }
+        } catch (error) {
+          log("Ошибка добавления в корзину: " + error.message, "error");
+        }
+      }
+
+      // Инициализация при загрузке
+      document.addEventListener("DOMContentLoaded", function () {
+        log("Страница тестирования загружена", "info");
+        checkAuth();
+      });
+    </script>
+  </body>
+</html>

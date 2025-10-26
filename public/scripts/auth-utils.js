@@ -172,6 +172,64 @@ const Auth = {
         loginLink.onclick = null;
       }
     }
+
+    // Добавить или обновить иконку корзины
+    this.updateCartIcon();
+  },
+
+  // Обновить иконку корзины
+  updateCartIcon() {
+    const menu = document.querySelector(".menu");
+    if (!menu) return;
+
+    // Проверить, есть ли уже иконка корзины
+    let cartIcon = menu.querySelector(".cart-icon");
+
+    if (!cartIcon) {
+      // Создать иконку корзины
+      const cartLi = document.createElement("li");
+      cartLi.innerHTML = `
+        <a href="cart.html" class="cart-icon" title="Корзина">
+          <span class="cart-icon-text">🛒</span>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
+      `;
+      menu.appendChild(cartLi);
+      cartIcon = cartLi.querySelector(".cart-icon");
+    }
+
+    // Обновить счетчик корзины если пользователь авторизован
+    if (this.isAuthenticated()) {
+      this.updateCartCount();
+    } else {
+      const cartCount = document.getElementById("cart-count");
+      if (cartCount) cartCount.textContent = "0";
+    }
+  },
+
+  // Обновить счетчик товаров в корзине
+  async updateCartCount() {
+    try {
+      const token = AuthToken.get();
+      if (!token) return;
+
+      const response = await fetch("/api/cart", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const cartCount = document.getElementById("cart-count");
+        if (cartCount && data.data && data.data.summary) {
+          cartCount.textContent = data.data.summary.totalItems || 0;
+        }
+      }
+    } catch (error) {
+      console.log("Ошибка получения счетчика корзины:", error);
+    }
   },
 
   // Показать меню пользователя
